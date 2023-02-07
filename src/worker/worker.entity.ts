@@ -1,11 +1,7 @@
-import { Table, Column, Model } from 'sequelize-typescript';
-import { Injectable } from '@nestjs/common';
+import { Table, Column, PrimaryKey, Model } from 'sequelize-typescript';
 
-@Injectable()
 @Table
-export class WorkerEntity extends Model {
-    @Column
-    id: number;
+export class WorkerEntity extends Model<WorkerEntity> {
 
     @Column
     name: string;
@@ -32,5 +28,5 @@ export class WorkerEntity extends Model {
     work: string;
 
     @Column
-    cv: Text;
+    cv: string;
 }

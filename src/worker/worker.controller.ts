@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Delete, Put, Body } from '@nestjs/common';
 import { WorkerEntity } from './worker.entity';
 import { WorkerService } from './worker.service';
+import { CreateWorkerDto } from './create-worker.dto';
 
 @Controller('worker')
 export class WorkerController {
@@ -12,7 +13,7 @@ export class WorkerController {
     }
 
     @Post()
-    async create(@Body() worker: WorkerEntity) {
+    async create(@Body() worker: CreateWorkerDto) {
         return this.workerService.create(worker);
     }
 

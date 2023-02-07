@@ -1,20 +1,20 @@
-import { Injectable} from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize/dist';
+import { Injectable, Inject } from '@nestjs/common';
 import { WorkerEntity } from './worker.entity';
 import { CreateWorkerDto } from './create-worker.dto';
 
 @Injectable()
 export class WorkerService {
     constructor(
-        @InjectModel(WorkerEntity)
-        private workerEntity: typeof WorkerEntity
+        @Inject('WORKER_REPOSITORY')
+        private workerRepository: typeof WorkerEntity
     ) {}
 
     async findAll(): Promise<WorkerEntity[]> {
-        return this.workerEntity.findAll<WorkerEntity>();
+        return this.workerRepository.findAll();
     }
 
-    async create(worker: CreateWorkerDto): Promise<WorkerEntity> {
-       return this.workerEntity.create(worker);
+    async create(worker: CreateWorkerDto) {
+       this.workerRepository.create<WorkerEntity>(worker);
+       this.workerRepository.sync()
     }
 }

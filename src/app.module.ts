@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
 import { WorkerModule } from './worker/worker.module';
+import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 
-
 @Module({
-    imports: [DatabaseModule, WorkerModule],
+    imports: [ConfigModule.forRoot({isGlobal: true}), DatabaseModule, WorkerModule],
     controllers: [],
     providers: [],
+    exports: []
 })
 export class AppModule {}

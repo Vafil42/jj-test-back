@@ -1,4 +1,4 @@
-import { IsString, IsDate } from "class-validator";
+import { IsString, IsDate, isNumber, IsNumber } from "class-validator";
 export class CreateWorkerDto {
     @IsString() name: string;
     @IsString() email: string;
@@ -8,5 +8,5 @@ export class CreateWorkerDto {
     @IsString() school: string;
     @IsString() inn: string;
     @IsString() work: string;
-    @IsString() cv: Text;
+    @IsString() cv: string;
 }
