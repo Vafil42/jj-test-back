@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Delete, Put, Body } from '@nestjs/common';
-import { WorkerEntity } from './worker.entity';
 import { WorkerService } from './worker.service';
-import { CreateWorkerDto } from './create-worker.dto';
+import { CreateWorkerDto } from './dto/create-worker.dto';
 
 @Controller('worker')
 export class WorkerController {

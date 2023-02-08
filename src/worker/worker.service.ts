@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { WorkerEntity } from './worker.entity';
-import { CreateWorkerDto } from './create-worker.dto';
+import { CreateWorkerDto } from './dto/create-worker.dto';
 
 @Injectable()
 export class WorkerService {
@@ -14,7 +14,9 @@ export class WorkerService {
     }
 
     async create(worker: CreateWorkerDto) {
-       this.workerRepository.create<WorkerEntity>(worker);
-       this.workerRepository.sync()
+        try {
+            await this.workerRepository.create<WorkerEntity>(worker);
+            await this.workerRepository.sync()
+        } catch(e){return e}
     }
 }
