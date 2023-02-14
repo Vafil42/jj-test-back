@@ -1,4 +1,4 @@
-import { Table, Column, PrimaryKey, Model } from 'sequelize-typescript';
+import { Table, Column, Model } from 'sequelize-typescript';
 
 @Table
 export class WorkerEntity extends Model<WorkerEntity> {
