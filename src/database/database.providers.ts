@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
+import { UserEntity, UserPermissionEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
-import { WorkerEntity } from '../worker/worker.entity';
 import { databaseConfig } from './database.config';
 
 export const databaseProviders = [{
@@ -21,7 +21,7 @@ export const databaseProviders = [{
            config = databaseConfig.development;
         }
         const sequelize = new Sequelize(config);
-        sequelize.addModels([WorkerEntity]);
+        sequelize.addModels([UserEntity, UserPermissionEntity]);
         await sequelize.sync();
         return sequelize;
     },
