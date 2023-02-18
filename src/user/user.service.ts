@@ -68,13 +68,21 @@ export class UserService {
     return user;
   }
 
-  async login(dto: LoginUserDto) {
+  async loginUser(id: number) {
+    const user = this.userRepository.findByPk(id);
+    if (user) {
+      return user;
+    }
+    return null;
+  }
+
+  async validateUser(dto: LoginUserDto) {
     const { email, password } = dto;
     const user = await this.userRepository.findOne({ where: { email } });
-    if ((await this.jwtCheak(user, password)) === true) {
-      return true;
+    if (user && (await this.jwtCheak(user, password)) === true) {
+      return user;
     } else {
-      return false;
+      return null;
     }
   }
 
@@ -82,7 +90,14 @@ export class UserService {
     if (this.jwtService.sign(password) === user.password) {
       return true;
     } else {
-      return false;
+      return null;
     }
+  }
+
+  async login(user: any) {
+    const payload = { username: user.email, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
