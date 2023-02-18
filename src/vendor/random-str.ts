@@ -1,5 +1,5 @@
-function randomStructuredClone(count) {
-  str_lover_engl_and_num = [
+export default function randomStructuredClone(count) {
+  const str_lover_engl_and_num = [
     'a',
     'b',
     'c',
@@ -37,11 +37,11 @@ function randomStructuredClone(count) {
     '9',
   ];
 
-  str = '';
+  let str = '';
   if (count == null) {
     count = 5;
   }
-  for (i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     str =
       str +
       str_lover_engl_and_num[

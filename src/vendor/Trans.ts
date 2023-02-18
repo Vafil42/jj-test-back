@@ -1,5 +1,5 @@
 export default function trans(str) {
-  let abc_lover = [
+  const abc_lover = [
     'а-ac',
     'б-b',
     'в-v',
