@@ -1,3 +1,3 @@
-import trans from "./Trans.mjs";
+import trans from './Trans.mjs';
 
-console.log(trans("хуй"))
+console.log(trans('хуй'));
