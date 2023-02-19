@@ -3,6 +3,7 @@ import { Get, Post, Delete, Put } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -42,5 +43,15 @@ export class UserController {
   @Put()
   async login(@Body() dto: LoginUserDto) {
     return await this.userService.login(dto);
+  }
+}
+
+@Controller('api')
+export class AppController {
+  constructor(private userService: UserService) {}
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    this.userService.create(createUserDto);
   }
 }

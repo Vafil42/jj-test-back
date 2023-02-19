@@ -25,7 +25,7 @@ let ValidationPipe = class ValidationPipe {
     }
     toValidate(metatype) {
         const types = [String, Boolean, Number, Array, Object];
-        return !types.find(type => metatype === type);
+        return !types.find((type) => metatype === type);
     }
 };
 ValidationPipe = __decorate([

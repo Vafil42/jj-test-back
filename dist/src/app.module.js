@@ -8,17 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
-const worker_module_1 = require("./worker/worker.module");
 const config_1 = require("@nestjs/config");
 const database_module_1 = require("./database/database.module");
+const user_module_1 = require("./user/user.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), database_module_1.DatabaseModule, worker_module_1.WorkerModule],
+        imports: [
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            database_module_1.DatabaseModule,
+            user_module_1.UserModule,
+        ],
         controllers: [],
         providers: [],
-        exports: []
+        exports: [],
     })
 ], AppModule);
 exports.AppModule = AppModule;
