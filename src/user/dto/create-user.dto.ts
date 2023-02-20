@@ -1,25 +1,18 @@
-import {
-  IsString,
-  IsNumber,
-  IsNotEmpty,
-  IsBoolean,
-  maxLength,
-} from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AppController } from '../user.controller';
 
 export class CreateUserDto {
   @IsString()
   @ApiProperty({
     description: 'The surname of a user',
-    maxLength: 50,
+    maxLength: 25,
   })
   lastname: string;
 
   @IsString()
   @ApiProperty({
     description: 'The name of a user',
-    maxLength: 50,
+    maxLength: 25,
   })
   firstname: string;
 
@@ -32,9 +25,17 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({
+    description: 'User password',
+    minLength: 8,
+  })
   password: string;
 
   @IsBoolean()
+  @ApiProperty({
+    description: 'Shows whether the user banned or not',
+    enum: [true, false],
+  })
   banned: boolean;
 
   @IsString()
@@ -52,8 +53,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Date of birth',
   })
-  // Правильно пишется "birthday"
-  birsday: string;
+  birthday: string;
 
   @IsString()
   learn: string;
