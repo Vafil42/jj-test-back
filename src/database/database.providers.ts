@@ -1,28 +1,30 @@
 import { Sequelize } from 'sequelize-typescript';
+import { UserEntity, UserPermissionEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
-import { WorkerEntity } from '../worker/worker.entity';
 import { databaseConfig } from './database.config';
 
-export const databaseProviders = [{
+export const databaseProviders = [
+  {
     provide: SEQUELIZE,
     useFactory: async () => {
-        let config;
-        switch (process.env.NODE_ENV) {
+      let config;
+      switch (process.env.NODE_ENV) {
         case DEVELOPMENT:
-           config = databaseConfig.development;
-           break;
+          config = databaseConfig.development;
+          break;
         case TEST:
-           config = databaseConfig.test;
-           break;
+          config = databaseConfig.test;
+          break;
         case PRODUCTION:
-           config = databaseConfig.production;
-           break;
+          config = databaseConfig.production;
+          break;
         default:
-           config = databaseConfig.development;
-        }
-        const sequelize = new Sequelize(config);
-        sequelize.addModels([WorkerEntity]);
-        await sequelize.sync();
-        return sequelize;
+          config = databaseConfig.development;
+      }
+      const sequelize = new Sequelize(config);
+      sequelize.addModels([UserEntity, UserPermissionEntity]);
+      await sequelize.sync();
+      return sequelize;
     },
-}];
+  },
+];
