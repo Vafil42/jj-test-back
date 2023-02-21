@@ -1,8 +1,7 @@
 import { Body, Controller, Param } from '@nestjs/common';
 import { Get, Post, Delete, Put } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
+import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -38,10 +37,5 @@ export class UserController {
   @Put(':id')
   async update(@Param() param, @Body() dto: UpdateUserDto) {
     return await this.userService.update(param.id, dto);
-  }
-
-  @Put()
-  async login(@Body() dto: LoginUserDto) {
-    return await this.userService.login(dto);
   }
 }

@@ -1,11 +1,12 @@
-import trans from './Trans.mjs';
-function passCheck(name, birthday, pass) {
+import trans from './Trans.js';
+
+export default function passCheck(name, birthday, pass) {
   // let user_name = "пётр";
   // let birthday = "01.01.01"; для тестов
   // let pass = "01.01.0"
   let i, j;
   let count = 0;
-  if (pass.indexOf(trans(user_name)) >= 0) {
+  if (pass.indexOf(trans(name)) >= 0) {
     return 'Ваш pass не должен совпадать с трасплитом имени';
   } else {
     if (pass.indexOf(birthday) >= 0) {

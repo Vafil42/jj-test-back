@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { UserAuthModule } from './auth/user.auth.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 
@@ -8,6 +9,7 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     UserModule,
+    UserAuthModule,
   ],
   controllers: [],
   providers: [],

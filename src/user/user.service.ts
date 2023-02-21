@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UserPermissionEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { UpdateUserDto } from '../auth/dto/update-user.dto';
+import { LoginUserDto } from '../auth/dto/login-user.dto';
 
 @Injectable()
 export class UserService {
@@ -21,13 +21,13 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto) {
-    try {
-      dto.password = await this.jwtService.sign(dto.password);
-      await this.userRepository.create(dto);
-      await this.userRepository.sync();
-    } catch (e) {
-      return e;
+    dto.password = await this.jwtService.sign(dto.password);
+    const user = await this.userRepository.create(dto);
+    await this.userRepository.sync();
+    if (user) {
+      return this.login(user);
     }
+    return null;
   }
 
   async ban(id: number) {
@@ -68,13 +68,21 @@ export class UserService {
     return user;
   }
 
-  async login(dto: LoginUserDto) {
+  async loginUser(id: number) {
+    const user = this.userRepository.findByPk(id);
+    if (user) {
+      return user;
+    }
+    return null;
+  }
+
+  async validateUser(dto: LoginUserDto) {
     const { email, password } = dto;
     const user = await this.userRepository.findOne({ where: { email } });
-    if ((await this.jwtCheak(user, password)) === true) {
-      return true;
+    if (user && (await this.jwtCheak(user, password)) === true) {
+      return user;
     } else {
-      return false;
+      return null;
     }
   }
 
@@ -82,7 +90,15 @@ export class UserService {
     if (this.jwtService.sign(password) === user.password) {
       return true;
     } else {
-      return false;
+      return null;
     }
+  }
+
+  async login(user: any) {
+    const payload = { username: user.email, sub: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: user,
+    };
   }
 }
