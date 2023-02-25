@@ -4,14 +4,14 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateUserDto {
   @IsString()
   @ApiProperty({
-    description: 'The surname of a user',
+    description: 'User`s last name',
     maxLength: 25,
   })
   lastname: string;
 
   @IsString()
   @ApiProperty({
-    description: 'The name of a user',
+    description: 'User`s first name',
     maxLength: 25,
   })
   firstname: string;
@@ -19,21 +19,21 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    description: 'Email address of user',
+    description: 'User`s email address',
   })
   email: string;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    description: 'User password',
+    description: 'User account password',
     minLength: 8,
   })
   password: string;
 
   @IsBoolean()
   @ApiProperty({
-    description: 'Shows whether the user banned or not',
+    description: 'User blocked if value is "true"',
     enum: [true, false],
   })
   banned: boolean;
@@ -43,7 +43,7 @@ export class CreateUserDto {
 
   @IsNumber()
   @ApiProperty({
-    description: 'The age of a user',
+    description: 'User`s age',
     maximum: 120,
     minimum: 14,
   })
@@ -51,7 +51,7 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty({
-    description: 'Date of birth',
+    description: 'User`s date of birth',
   })
   birthday: string;
 
@@ -61,7 +61,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    description: 'Taxpayer Identification number',
+    description: 'User`s Taxpayer Identification number',
     minLength: 12,
     maxLength: 12,
   })
@@ -69,7 +69,7 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty({
-    description: 'City where user living',
+    description: 'User`s city or town',
     minLength: 2,
     maxLength: 25,
     // Минимум и максимум для населенных пунктов в России
@@ -78,7 +78,7 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty({
-    description: 'Information about user',
+    description: 'Resume',
   })
   about: string;
 
@@ -87,7 +87,7 @@ export class CreateUserDto {
 
   @IsString()
   @ApiProperty({
-    description: 'Different roles give the user different permissions',
+    description: 'User`s role',
     enum: ['Admin', 'User'],
   })
   role: string;
