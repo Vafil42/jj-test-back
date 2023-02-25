@@ -1,3 +1,4 @@
+import { JSON } from 'sequelize';
 import {
   Table,
   Column,
@@ -5,7 +6,9 @@ import {
   Default,
   Unique,
   HasMany,
+  DataType,
 } from 'sequelize-typescript';
+import { Json } from 'sequelize/types/utils';
 import { UserPermissionEntity } from './user.permissions.entity';
 
 @Table
@@ -48,7 +51,7 @@ export class UserEntity extends Model<UserEntity> {
   @Column
   inn: string;
 
-  @Column
+  @Column(JSON)
   region: JSON;
 
   @Default(null)

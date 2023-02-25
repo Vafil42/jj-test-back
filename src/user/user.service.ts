@@ -50,7 +50,6 @@ export class UserService {
     }
     dto.password = 'pass';
     await user.update(dto);
-    console.log(dto);
     await this.userRepository.sync();
   }
 
