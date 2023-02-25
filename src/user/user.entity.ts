@@ -10,11 +10,6 @@ import { UserPermissionEntity } from './user.permissions.entity';
 
 @Table
 export class UserEntity extends Model<UserEntity> {
-  //    @AutoIncrement
-  //    @PrimaryKey
-  //    @Column
-  //    id: number;
-
   @Default(null)
   @Column
   lastname: string;
@@ -41,13 +36,9 @@ export class UserEntity extends Model<UserEntity> {
   @Column
   implication: string;
 
-  @Default(0)
-  @Column
-  age: number;
-
   @Default(null)
   @Column
-  birsday: string;
+  birthday: string;
 
   @Default(null)
   @Column
@@ -56,6 +47,9 @@ export class UserEntity extends Model<UserEntity> {
   @Default(null)
   @Column
   inn: string;
+
+  @Column
+  region: JSON;
 
   @Default(null)
   @Column
