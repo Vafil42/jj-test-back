@@ -9,7 +9,7 @@ dotenv.config();
 
 @Module({
   exports: [UserService],
-  imports: [JwtModule.register({ secret: process.env.JWTKEY })],
+  imports: [JwtModule.register({ secret: process.env.DB_HASH_SECRET })],
   controllers: [UserController],
   providers: [UserService, ...userProviders],
 })
