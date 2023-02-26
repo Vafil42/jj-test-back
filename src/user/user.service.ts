@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UserPermissionEntity } from './user.entity';
@@ -20,27 +20,36 @@ export class UserService {
     return await this.userRepository.findAll();
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto, role) {
     dto.password = await this.jwtService.sign(dto.password);
+    if ((dto.role === 'ADMIN' || dto.role === 'ROOT') && (role === 'ADMIN' || role === 'USER')) {
+      throw new ForbiddenException('У вас нет прав доступа')
+    }
     const user = await this.userRepository.create(dto);
     await this.userRepository.sync();
     if (user) {
-      return this.login(user);
+      return user;
     }
     return null;
   }
 
-  async ban(id: number) {
+  async ban(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);
+    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
+      throw new ForbiddenException('У вас нет прав доступа')
+    }
     await user.update({ banned: true });
 
     await this.userRepository.sync();
   }
 
-  async update(id: number, dto: UpdateUserDto) {
+  async update(id: number, dto: UpdateUserDto, role: string) {
     const user = await this.userRepository.findByPk(id, {
       include: UserPermissionEntity,
     });
+    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
+      throw new ForbiddenException('У вас нет прав доступа')
+    }
     if (dto.permission) {
       this.userPermissionEntity.create({
         userId: id,
@@ -53,8 +62,11 @@ export class UserService {
     await this.userRepository.sync();
   }
 
-  async delete(id: number) {
+  async delete(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);
+    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
+      throw new ForbiddenException('У вас нет прав доступа')
+    }
     await user.destroy();
     this.userRepository.sync();
   }
@@ -68,8 +80,24 @@ export class UserService {
   }
 
   async loginUser(id: number) {
-    const user = this.userRepository.findByPk(id);
+    const user = await this.userRepository.findByPk(id);
     if (user) {
+      return user;
+    }
+    return null;
+  }
+
+  async loginAdmin(id: number) {
+    const user = await this.userRepository.findByPk(id)
+    if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
+      return user;
+    }
+    return null;
+  }
+
+  async loginRoot(id: number) {
+    const user = await this.userRepository.findByPk(id)
+    if (user && user.role === 'ROOT') {
       return user;
     }
     return null;
@@ -93,11 +121,5 @@ export class UserService {
     }
   }
 
-  async login(user: any) {
-    const payload = { username: user.email, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: user,
-    };
-  }
+  
 }
