@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Injectable()
-export class JwtUserStrategy extends PassportStrategy(Strategy) {
+export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwtUser') {
   constructor(private userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

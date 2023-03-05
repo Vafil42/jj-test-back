@@ -22,9 +22,6 @@ export class UserService {
 
   async create(dto: CreateUserDto, role) {
     dto.password = await this.jwtService.sign(dto.password);
-    if ((dto.role === 'ADMIN' || dto.role === 'ROOT') && (role === 'ADMIN' || role === 'USER')) {
-      throw new ForbiddenException('У вас нет прав доступа')
-    }
     const user = await this.userRepository.create(dto);
     await this.userRepository.sync();
     if (user) {
@@ -72,7 +69,7 @@ export class UserService {
   }
 
   async findById(id: number) {
-    const user = this.userRepository.findByPk(id, {
+    const user = await this.userRepository.findByPk(id, {
       include: UserPermissionEntity,
     });
 
