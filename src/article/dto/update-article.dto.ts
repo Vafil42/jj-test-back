@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class UpdateArticleDto {
   @IsString()
@@ -19,4 +19,10 @@ export class UpdateArticleDto {
     example: 'Какая-то картинка',
   })
   avatar: string;
+  @IsBoolean()
+  @ApiProperty({
+    description: 'visibilite ? True : False',
+    example: 'по дефолту видно статью',
+  })
+  visibilite: boolean;
 }
