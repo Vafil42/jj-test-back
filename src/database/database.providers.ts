@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import { ReviewEntity } from 'src/review/review.entity';
 import { UserEntity, UserPermissionEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
 import { databaseConfig } from './database.config';
@@ -22,7 +23,7 @@ export const databaseProviders = [
           config = databaseConfig.development;
       }
       const sequelize = new Sequelize(config);
-      sequelize.addModels([UserEntity, UserPermissionEntity]);
+      sequelize.addModels([UserEntity, UserPermissionEntity, ReviewEntity]);
       await sequelize.sync();
       return sequelize;
     },

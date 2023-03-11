@@ -1,8 +1,9 @@
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "src/user/user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 
-
+@Injectable()
 export class UserAuthService {
     constructor (
         private userService: UserService,
@@ -18,7 +19,7 @@ export class UserAuthService {
       }
     
     async createUser(dto: CreateUserDto) {
-        return await this.login(await this.userService.create(dto, 'USER'))
+        const user = await this.userService.create(dto, 'USER');
+        return await this.login(user);
     }
-    
 }
