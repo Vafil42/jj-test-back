@@ -3,7 +3,13 @@ import { Body } from '@nestjs/common/decorators';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtUserAuthGuard } from './guard/jwt-user-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
-import { ApiBody, ApiHeader, ApiHeaders, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiHeader,
+  ApiHeaders,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserAuthService } from './user.auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 
@@ -13,7 +19,7 @@ export class UserAuthController {
   constructor(private userAuthService: UserAuthService) {}
 
   @ApiOperation({ summary: 'Аутентификация пользователя' })
-  @ApiBody({type: [LoginUserDto]})
+  @ApiBody({ type: [LoginUserDto] })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
@@ -21,7 +27,7 @@ export class UserAuthController {
   }
 
   @ApiOperation({ summary: 'Авторизация пользователя' })
-  @ApiHeader({name: 'Authorization'})
+  @ApiHeader({ name: 'Authorization' })
   @UseGuards(JwtUserAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {

@@ -37,8 +37,12 @@ export class UserService {
 
   async ban(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);
-    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && user.role === 'ADMIN') ||
+      (role === 'ADMIN' && user.role === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
     }
     await user.update({ banned: true });
 
@@ -49,8 +53,12 @@ export class UserService {
     const user = await this.userRepository.findByPk(id, {
       include: UserPermissionEntity,
     });
-    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && user.role === 'ADMIN') ||
+      (role === 'ADMIN' && user.role === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
     }
     if (dto.permission) {
       this.userPermissionEntity.create({
@@ -66,8 +74,12 @@ export class UserService {
 
   async delete(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);
-    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && user.role === 'ADMIN') ||
+      (role === 'ADMIN' && user.role === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
     }
     await user.destroy();
     this.userRepository.sync();
@@ -90,7 +102,7 @@ export class UserService {
   }
 
   async loginAdmin(id: number) {
-    const user = await this.userRepository.findByPk(id)
+    const user = await this.userRepository.findByPk(id);
     if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
       return user;
     }
@@ -98,7 +110,7 @@ export class UserService {
   }
 
   async loginRoot(id: number) {
-    const user = await this.userRepository.findByPk(id)
+    const user = await this.userRepository.findByPk(id);
     if (user && user.role === 'ROOT') {
       return user;
     }
@@ -122,6 +134,4 @@ export class UserService {
       return null;
     }
   }
-
-  
 }
