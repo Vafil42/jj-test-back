@@ -10,7 +10,7 @@ export class ArticleEntity extends Model<ArticleEntity> {
   body: string;
 
   @Column
-  autor: number;
+  autorId: number;
 
   @Default(true)
   @Column

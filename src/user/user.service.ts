@@ -1,4 +1,9 @@
-import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UserPermissionEntity } from './user.entity';
@@ -20,15 +25,18 @@ export class UserService {
     return await this.userRepository.findAll();
   }
 
-  async create(dto: CreateUserDto, role) {
+  async create(dto: CreateUserDto) {
     dto.password = await this.jwtService.sign(dto.password);
     if (
-      (dto.role === 'ADMIN' || dto.role === 'ROOT') &&
-      (role === 'ADMIN' || role === 'USER')
+      (
+        await this.userRepository.findAndCountAll({
+          where: { email: dto.email },
+        })
+      ).count != 0
     ) {
-      throw new ForbiddenException('У вас нет прав доступа');
+      throw new BadRequestException('Пользователь таким email уже существует');
     }
-    const user = await this.userRepository.create(dto);
+    const user = await this.userRepository.create(dto, {});
     await this.userRepository.sync();
     if (user) {
       return user;
@@ -87,7 +95,7 @@ export class UserService {
   }
 
   async findById(id: number) {
-    const user = this.userRepository.findByPk(id, {
+    const user = await this.userRepository.findByPk(id, {
       include: UserPermissionEntity,
     });
 

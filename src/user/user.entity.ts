@@ -6,9 +6,7 @@ import {
   Default,
   Unique,
   HasMany,
-  DataType,
 } from 'sequelize-typescript';
-import { Json } from 'sequelize/types/utils';
 import { UserPermissionEntity } from './user.permissions.entity';
 
 @Table
