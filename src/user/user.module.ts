@@ -8,7 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 dotenv.config();
 
 @Module({
-  exports: [UserService],
+  exports: [UserModule, UserService],
   imports: [JwtModule.register({ secret: process.env.DB_HASH_SECRET })],
   controllers: [UserController],
   providers: [UserService, ...userProviders],
