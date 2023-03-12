@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { UserAuthModule } from './auth/user.auth.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
+import { VacancyController } from './vacancy/vacancy.controller';
+import { VacancyModule } from './vacancy/vacancy.module';
 
 @Module({
   imports: [
@@ -10,8 +12,9 @@ import { UserModule } from './user/user.module';
     DatabaseModule,
     UserModule,
     UserAuthModule,
+    VacancyModule,
   ],
-  controllers: [],
+  controllers: [VacancyController],
   providers: [],
   exports: [],
 })
