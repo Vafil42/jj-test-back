@@ -5,6 +5,7 @@ import {
   Model,
   Default,
   Unique,
+  HasMany,
 } from 'sequelize-typescript';
 import { UserPermissionEntity } from './user.permissions.entity';
 

@@ -10,7 +10,7 @@ async function bootstrap() {
         .setDescription('The API for Junior Job')
         .setVersion('1.0')
         .build();
-    const document = swagger_1.SwaggerModule.createDocument(app, config);
+    const document = swagger_1.SwaggerModule.createDocument(app, config, {});
     swagger_1.SwaggerModule.setup('api', app, document);
     await app.listen(8080);
 }

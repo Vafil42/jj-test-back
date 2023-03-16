@@ -5,7 +5,7 @@ import { UserAuthModule } from './auth/user.auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
-
+import { VacancyModule } from './vacancy/vacancy.module';
 
 @Module({
   imports: [
@@ -14,8 +14,10 @@ import { UserModule } from './user/user.module';
     DatabaseModule,
     UserModule,
     UserAuthModule,
+    ReviewModule,
+    VacancyModule,
   ],
-  controllers: [VacancyController],
+  controllers: [],
   providers: [],
   exports: [],
 })

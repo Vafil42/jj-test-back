@@ -1,7 +1,7 @@
 import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
 
 @Table
-export class UserEntity extends Model<UserEntity> {
+export class VacancyEntity extends Model<VacancyEntity> {
   // required, unique
   @Unique
   @Column

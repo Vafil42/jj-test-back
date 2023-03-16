@@ -12,7 +12,9 @@ const config_1 = require("@nestjs/config");
 const article_module_1 = require("./article/article.module");
 const user_auth_module_1 = require("./auth/user.auth.module");
 const database_module_1 = require("./database/database.module");
+const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
+const vacancy_module_1 = require("./vacancy/vacancy.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -23,6 +25,8 @@ AppModule = __decorate([
             database_module_1.DatabaseModule,
             user_module_1.UserModule,
             user_auth_module_1.UserAuthModule,
+            review_module_1.ReviewModule,
+            vacancy_module_1.VacancyModule,
         ],
         controllers: [],
         providers: [],
