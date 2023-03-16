@@ -1,10 +1,11 @@
-import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
+import { Injectable, Inject, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UserPermissionEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
+import { ApiBadRequestResponse } from '@nestjs/swagger';
 
 @Injectable()
 export class UserService {
@@ -22,10 +23,10 @@ export class UserService {
 
   async create(dto: CreateUserDto, role) {
     dto.password = await this.jwtService.sign(dto.password);
-    if ((dto.role === 'ADMIN' || dto.role === 'ROOT') && (role === 'ADMIN' || role === 'USER')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if ((await this.userRepository.findAndCountAll({where: {email: dto.email}})).count != 0) {
+      throw new BadRequestException('Пользователь таким email уже существует');
     }
-    const user = await this.userRepository.create(dto);
+    const user = await this.userRepository.create(dto, {});
     await this.userRepository.sync();
     if (user) {
       return user;
@@ -33,10 +34,15 @@ export class UserService {
     return null;
   }
 
+
   async ban(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);
-    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && user.role === 'ADMIN') ||
+      (role === 'ADMIN' && user.role === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
     }
     await user.update({ banned: true });
 
@@ -47,8 +53,12 @@ export class UserService {
     const user = await this.userRepository.findByPk(id, {
       include: UserPermissionEntity,
     });
-    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && user.role === 'ADMIN') ||
+      (role === 'ADMIN' && user.role === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
     }
     if (dto.permission) {
       this.userPermissionEntity.create({
@@ -64,15 +74,19 @@ export class UserService {
 
   async delete(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);
-    if (role === 'USER' || (role === 'ADMIN' && user.role === 'ADMIN') || (role === 'ADMIN' && user.role === 'ROOT')) {
-      throw new ForbiddenException('У вас нет прав доступа')
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && user.role === 'ADMIN') ||
+      (role === 'ADMIN' && user.role === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
     }
     await user.destroy();
     this.userRepository.sync();
   }
 
   async findById(id: number) {
-    const user = this.userRepository.findByPk(id, {
+    const user = await this.userRepository.findByPk(id, {
       include: UserPermissionEntity,
     });
 
@@ -88,7 +102,7 @@ export class UserService {
   }
 
   async loginAdmin(id: number) {
-    const user = await this.userRepository.findByPk(id)
+    const user = await this.userRepository.findByPk(id);
     if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
       return user;
     }
@@ -96,7 +110,7 @@ export class UserService {
   }
 
   async loginRoot(id: number) {
-    const user = await this.userRepository.findByPk(id)
+    const user = await this.userRepository.findByPk(id);
     if (user && user.role === 'ROOT') {
       return user;
     }
@@ -120,6 +134,4 @@ export class UserService {
       return null;
     }
   }
-
-  
 }
