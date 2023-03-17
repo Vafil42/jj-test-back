@@ -1,21 +1,21 @@
-import { Model, Table, Column, Default } from "sequelize-typescript";
+import { Model, Table, Column, Default } from 'sequelize-typescript';
 
 @Table
 export class ReviewEntity extends Model<ReviewEntity> {
-    @Column
-    authorId: number;
+  @Column
+  authorId: number;
 
-    @Column
-    userId: number;
+  @Column
+  userId: number;
 
-    @Column
-    review: number;
+  @Column
+  review: number;
 
-    @Default(null)
-    @Column
-    body: string;
+  @Default(null)
+  @Column
+  body: string;
 
-    @Default(true)
-    @Column
-    show: boolean;
+  @Default(true)
+  @Column
+  show: boolean;
 }
