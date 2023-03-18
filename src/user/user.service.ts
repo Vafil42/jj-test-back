@@ -1,4 +1,9 @@
-import { Injectable, Inject, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
 import { UserPermissionEntity } from './user.entity';
@@ -23,7 +28,13 @@ export class UserService {
 
   async create(dto: CreateUserDto, role) {
     dto.password = await this.jwtService.sign(dto.password);
-    if ((await this.userRepository.findAndCountAll({where: {email: dto.email}})).count != 0) {
+    if (
+      (
+        await this.userRepository.findAndCountAll({
+          where: { email: dto.email },
+        })
+      ).count != 0
+    ) {
       throw new BadRequestException('Пользователь таким email уже существует');
     }
     const user = await this.userRepository.create(dto, {});
@@ -33,7 +44,6 @@ export class UserService {
     }
     return null;
   }
-
 
   async ban(id: number, role: string) {
     const user = await this.userRepository.findByPk(id);

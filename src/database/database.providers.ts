@@ -24,7 +24,12 @@ export const databaseProviders = [
           config = databaseConfig.development;
       }
       const sequelize = new Sequelize(config);
-      sequelize.addModels([UserEntity, UserPermissionEntity, ArticleEntity, ReviewEntity]);
+      sequelize.addModels([
+        UserEntity,
+        UserPermissionEntity,
+        ArticleEntity,
+        ReviewEntity,
+      ]);
       await sequelize.sync();
       return sequelize;
     },

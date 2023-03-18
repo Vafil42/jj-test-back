@@ -6,7 +6,6 @@ import { DatabaseModule } from './database/database.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -14,7 +13,7 @@ import { UserModule } from './user/user.module';
     DatabaseModule,
     UserModule,
     UserAuthModule,
-    ReviewModule
+    ReviewModule,
   ],
   controllers: [],
   providers: [],

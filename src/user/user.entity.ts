@@ -1,11 +1,5 @@
 import { JSON } from 'sequelize';
-import {
-  Table,
-  Column,
-  Model,
-  Default,
-  Unique,
-} from 'sequelize-typescript';
+import { Table, Column, Model, Default, Unique } from 'sequelize-typescript';
 import { UserPermissionEntity } from './user.permissions.entity';
 
 @Table
