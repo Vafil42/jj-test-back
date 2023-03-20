@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
-export class CreateVacancyDto {
+export class UpdateVacancyDto {
   @IsString()
   @ApiProperty({
     description: 'Название вакансии',
@@ -29,6 +29,12 @@ export class CreateVacancyDto {
     example: 6700,
   })
   region: number;
+
+  @IsNumber()
+  @ApiProperty({
+    description: 'Рейтинг вакансии. Формируется из оценок соискателей.',
+  })
+  priority: number;
 
   @IsString()
   @ApiProperty({

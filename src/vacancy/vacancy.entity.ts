@@ -1,3 +1,4 @@
+import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
 
 @Table
@@ -7,9 +8,13 @@ export class VacancyEntity extends Model<VacancyEntity> {
   @Column
   title: string;
 
+  @Unique
+  @Column
+  href: string;
+
   // required
   @Column
-  author: string;
+  authorId: number;
 
   // required, default = null
   @Default(null)
