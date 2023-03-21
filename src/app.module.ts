@@ -4,6 +4,9 @@ import { UserAuthModule } from './auth/user.auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { EsiaService } from './esia/esia.service';
+import { EsiaModule } from './esia/esia.module';
+import { SettingsModule } from './settings/settings.module';
 
 
 @Module({
@@ -12,10 +15,12 @@ import { UserModule } from './user/user.module';
     DatabaseModule,
     UserModule,
     UserAuthModule,
-    ReviewModule
+    ReviewModule,
+    EsiaModule,
+    SettingsModule
   ],
   controllers: [],
-  providers: [],
+  providers: [EsiaService],
   exports: [],
 })
 export class AppModule {}
