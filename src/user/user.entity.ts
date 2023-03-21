@@ -5,7 +5,10 @@ import {
   Model,
   Default,
   Unique,
+  HasMany,
+  HasOne,
 } from 'sequelize-typescript';
+import { SettingsEntity } from 'src/settings/settins.entity';
 import { UserPermissionEntity } from './user.permissions.entity';
 
 @Table
@@ -66,6 +69,9 @@ export class UserEntity extends Model<UserEntity> {
   @Default('USER')
   @Column
   role: string;
+
+  @HasOne(() => SettingsEntity)
+  settingsEntity: SettingsEntity;
 }
 
 export { UserPermissionEntity };
