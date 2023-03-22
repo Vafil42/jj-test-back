@@ -5,7 +5,6 @@ import {
   Model,
   Default,
   Unique,
-  HasMany,
   HasOne,
   DataType,
 } from 'sequelize-typescript';
