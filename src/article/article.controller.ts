@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAdminAuthGuard } from 'src/auth/guard/jwt-admin-auth.guard';
@@ -33,8 +34,8 @@ export class ArticleController {
   @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Создание пользователя' })
   @Post()
-  async create(@Body() dto: CreateArticleDto) {
-    return this.articleService.create(dto);
+  async create(@Body() dto: CreateArticleDto, @Request() req) {
+    return this.articleService.create(dto, req);
   }
   @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Удаление пользователя по id' })

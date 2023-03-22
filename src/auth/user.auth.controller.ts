@@ -3,13 +3,7 @@ import { Body } from '@nestjs/common/decorators';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtUserAuthGuard } from './guard/jwt-user-auth.guard';
 import { LocalAuthGuard } from './guard/local-auth.guard';
-import {
-  ApiBody,
-  ApiHeader,
-  ApiHeaders,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserAuthService } from './user.auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 

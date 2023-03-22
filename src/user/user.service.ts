@@ -10,7 +10,6 @@ import { UserPermissionEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
-import { ApiBadRequestResponse } from '@nestjs/swagger';
 
 @Injectable()
 export class UserService {
@@ -26,7 +25,7 @@ export class UserService {
     return await this.userRepository.findAll();
   }
 
-  async create(dto: CreateUserDto, role) {
+  async create(dto: CreateUserDto) {
     dto.password = await this.jwtService.sign(dto.password);
     if (
       (
