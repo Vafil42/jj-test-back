@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto) {
-    dto.password = this.jwtService.sign(dto.password);
+    dto.password = await this.jwtService.sign(dto.password);
     if (
       (
         await this.userRepository.findAndCountAll({

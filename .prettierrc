@@ -1,4 +1,9 @@
 {
+  "extends": [".eslintrc..js", "prettier"],
+  "semi": true,
   "singleQuote": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "no-bracket-spacing": false,
+  "jsxSingleQuote": true
 }

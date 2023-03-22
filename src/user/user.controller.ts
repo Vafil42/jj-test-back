@@ -3,10 +3,8 @@ import { Get, Post, Delete, Put } from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { UserService } from './user.service';
-import { ApiTags, ApiProperty, ApiOperation } from '@nestjs/swagger';
-import { JwtUserAuthGuard } from 'src/auth/guard/jwt-user-auth.guard';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { JwtAdminAuthGuard } from 'src/auth/guard/jwt-admin-auth.guard';
-import { Query } from 'typeorm/driver/Query';
 
 @ApiTags('Запросы Admin')
 @Controller('user')
@@ -29,7 +27,7 @@ export class UserController {
   @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Создание пользователя' })
   @Post()
-  async create(@Body() dto: CreateUserDto, @Request() req) {
+  async create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
   }
 
