@@ -18,14 +18,6 @@ export class UserAuthService {
     };
   }
 
-  async login(user: any) {
-    const payload = { username: user.email, sub: user.id };
-    return {
-      access_token: await this.jwtService.sign(payload),
-      user: user,
-    };
-  }
-
   async createUser(dto: CreateUserDto) {
     const user = await this.userService.create(dto, 'USER');
     return await this.login(user);

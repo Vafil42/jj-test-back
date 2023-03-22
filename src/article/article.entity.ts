@@ -1,4 +1,5 @@
-import { Table, Model, Default, Column, Unique } from 'sequelize-typescript';
+import { Table, Model, Default, Column } from 'sequelize-typescript';
+
 @Table
 export class ArticleEntity extends Model<ArticleEntity> {
   @Default(null)
@@ -10,7 +11,7 @@ export class ArticleEntity extends Model<ArticleEntity> {
   body: string;
 
   @Column
-  autor: number;
+  autorId: number;
 
   @Default(true)
   @Column

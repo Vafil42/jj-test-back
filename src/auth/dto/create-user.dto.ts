@@ -1,15 +1,5 @@
-import {
-  IsString,
-  IsNumber,
-  IsNotEmpty,
-  IsBoolean,
-  IsEmail,
-  maxLength,
-  Length,
-  IsJSON,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, Length, IsJSON } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Json } from 'sequelize/types/utils';
 
 export class CreateUserDto {
   @IsString()
