@@ -1,6 +1,6 @@
 export default function trans(str) {
   const abc_lover = [
-    'а-ac',
+    'а-a',
     'б-b',
     'в-v',
     'г-g',
@@ -39,8 +39,15 @@ export default function trans(str) {
     for (let j = 0; j < abc_lover.length; j++) {
       if (str[i] == abc_lover[j].substring(0, 1)) {
         str1 = str1 + abc_lover[j].substring(2);
+        break;
+      } else {
+        if (j + 1 == abc_lover.length) {
+          str1 = str1 + str[i];
+          continue;
+        }
       }
     }
   }
   return str1;
 }
+// console.log(trans('ываы'));

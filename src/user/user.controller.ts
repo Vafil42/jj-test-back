@@ -34,21 +34,21 @@ export class UserController {
   }
 
   @UseGuards(JwtAdminAuthGuard)
-  @ApiOperation({summary: 'Блокировка пользователя по id'})
+  @ApiOperation({ summary: 'Блокировка пользователя по id' })
   @Post(':id')
   async ban(@Param() param, @Request() req) {
     return await this.userService.ban(param.id, req.user.role);
   }
 
   @UseGuards(JwtAdminAuthGuard)
-  @ApiOperation({summary: 'Удаление пользователя по id'})
+  @ApiOperation({ summary: 'Удаление пользователя по id' })
   @Delete(':id')
   async delete(@Param() param, @Request() req) {
     return await this.userService.delete(param.id, req.user.role);
   }
 
   @UseGuards(JwtAdminAuthGuard)
-  @ApiOperation({summary: 'Изменение данных пользователя по id'})
+  @ApiOperation({ summary: 'Изменение данных пользователя по id' })
   @Put(':id')
   async update(@Param() param, @Body() dto: UpdateUserDto, @Request() req) {
     return await this.userService.update(param.id, dto, req.user.role);

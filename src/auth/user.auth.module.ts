@@ -5,15 +5,24 @@ import { UserModule } from 'src/user/user.module';
 import { LocalStrategy } from './strategy/local.strategy';
 import { UserAuthController } from './user.auth.controller';
 import { UserAuthService } from './user.auth.service';
-import * as dotenv from 'dotenv'
+import * as dotenv from 'dotenv';
 import { JwtUserStrategy } from './strategy/jwtUser.strategy';
 import { JwtAdminStrategy } from './strategy/jwtAdmin.strategy';
 
-dotenv.config()
+dotenv.config();
 
 @Module({
-  imports: [UserModule, PassportModule, JwtModule.register({secret: process.env.JWT_SECRET})],
+  imports: [
+    UserModule,
+    PassportModule,
+    JwtModule.register({ secret: process.env.JWT_SECRET }),
+  ],
   controllers: [UserAuthController],
-  providers: [LocalStrategy, JwtUserStrategy, JwtAdminStrategy, UserAuthService],
+  providers: [
+    LocalStrategy,
+    JwtUserStrategy,
+    JwtAdminStrategy,
+    UserAuthService,
+  ],
 })
 export class UserAuthModule {}
