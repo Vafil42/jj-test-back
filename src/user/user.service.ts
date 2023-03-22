@@ -9,24 +9,24 @@ import { UserEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
-import { ApiBadRequestResponse } from '@nestjs/swagger';
+import { SettingsService } from 'src/settings/settings.service';
+import { SettingsEntity } from 'src/settings/settings.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: typeof UserEntity,
-    @Inject('USER_PERMISSION_REPOSITORY')
-    private userPermissionEntity: typeof UserPermissionEntity,
     private jwtService: JwtService,
+    private settingsService: SettingsService,
   ) {}
 
   async findAll() {
-    return await this.userRepository.findAll();
+    return await this.userRepository.findAll({include: [SettingsEntity]});
   }
 
-  async create(dto: CreateUserDto, role) {
-    dto.password = await this.jwtService.sign(dto.password);
+  async create(dto: CreateUserDto) {
+    dto.password = this.jwtService.sign(dto.password);
     if (
       (
         await this.userRepository.findAndCountAll({
@@ -36,7 +36,9 @@ export class UserService {
     ) {
       throw new BadRequestException('Пользователь таким email уже существует');
     }
-    const user = await this.userRepository.create(dto, {});
+
+    const user = await this.userRepository.create(dto);
+    const settings = await this.settingsService.create(user)
     await this.userRepository.sync();
     if (user) {
       return user;
@@ -59,9 +61,7 @@ export class UserService {
   }
 
   async update(id: number, dto: UpdateUserDto, role: string) {
-    const user = await this.userRepository.findByPk(id, {
-      include: UserPermissionEntity,
-    });
+    const user = await this.userRepository.findByPk(id);
     if (
       role === 'USER' ||
       (role === 'ADMIN' && user.role === 'ADMIN') ||
@@ -69,16 +69,9 @@ export class UserService {
     ) {
       throw new ForbiddenException('У вас нет прав доступа');
     }
-    if (dto.permission) {
-      this.userPermissionEntity.create({
-        userId: id,
-        userEntity: user,
-        permission: dto.permission,
-      });
-    }
-    dto.password = 'pass';
     await user.update(dto);
     await this.userRepository.sync();
+    return user;
   }
 
   async delete(id: number, role: string) {
@@ -95,15 +88,12 @@ export class UserService {
   }
 
   async findById(id: number) {
-    const user = await this.userRepository.findByPk(id, {
-      include: UserPermissionEntity,
-    });
-
+    const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
     return user;
   }
 
   async loginUser(id: number) {
-    const user = await this.userRepository.findByPk(id);
+    const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
     if (user) {
       return user;
     }
@@ -128,7 +118,7 @@ export class UserService {
 
   async validateUser(dto: LoginUserDto) {
     const { email, password } = dto;
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ where: { email }, include: [SettingsEntity]});
     if (user && (await this.jwtCheak(user, password)) === true) {
       return user;
     } else {

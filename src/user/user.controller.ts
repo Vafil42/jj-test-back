@@ -30,7 +30,7 @@ export class UserController {
   @ApiOperation({ summary: 'Создание пользователя' })
   @Post()
   async create(@Body() dto: CreateUserDto, @Request() req) {
-    return this.userService.create(dto, req.user.role);
+    return this.userService.create(dto);
   }
 
   @UseGuards(JwtAdminAuthGuard)

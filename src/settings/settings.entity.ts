@@ -4,7 +4,8 @@ import { UserEntity } from "src/user/user.entity";
 @Table
 export class SettingsEntity extends Model<SettingsEntity> {
     @ForeignKey(() => UserEntity)
-    settingsId: number;
+    @Column
+    userId: number;
 
     @BelongsTo(() => UserEntity)
     userEntity: UserEntity;
@@ -22,7 +23,8 @@ export class SettingsEntity extends Model<SettingsEntity> {
     @Column
     theme: string;
 
+    @Default([])
     @Column(DataType.ARRAY(DataType.STRING))
-    motification;
+    notification: string[];
 
 }

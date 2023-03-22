@@ -6,6 +6,7 @@ import {
   IsEmail,
   Length,
   IsJSON,
+  IsArray,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Json } from 'sequelize/types/utils';
@@ -123,12 +124,12 @@ export class UpdateUserDto {
   })
   banned: boolean;
 
-  @IsString()
+  @IsArray()
   @ApiProperty({
     description: 'Разрешения пользователя',
     example: 'delete user',
   })
-  permission: string;
+  permissions: string[];
 
   @IsString()
   @ApiProperty({

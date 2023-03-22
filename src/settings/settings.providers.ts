@@ -1,4 +1,4 @@
-import { SettingsEntity } from "./settins.entity";
+import { SettingsEntity } from "./settings.entity";
 
 export const settingsProviders = [
     {
