@@ -15,7 +15,7 @@ import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { VacancyService } from './vacancy.service';
 
-@ApiTags('Вакансии')
+@ApiTags('Запросы Vacancy')
 @Controller('vacancy')
 export class VacancyController {
   constructor(private vacancyService: VacancyService) {}
