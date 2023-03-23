@@ -19,7 +19,7 @@ export class UserAuthService {
   }
 
   async createUser(dto: CreateUserDto) {
-    const user = await this.userService.create(dto, 'USER');
+    const user = await this.userService.create(dto);
     return await this.login(user);
   }
 }

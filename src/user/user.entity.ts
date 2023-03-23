@@ -5,9 +5,10 @@ import {
   Model,
   Default,
   Unique,
-  HasMany,
+  HasOne,
+  DataType,
 } from 'sequelize-typescript';
-import { UserPermissionEntity } from './user.permissions.entity';
+import { SettingsEntity } from 'src/settings/settings.entity';
 
 @Table
 export class UserEntity extends Model<UserEntity> {
@@ -30,8 +31,9 @@ export class UserEntity extends Model<UserEntity> {
   @Column
   banned: boolean;
 
-  @HasMany(() => UserPermissionEntity)
-  permissions: UserPermissionEntity[];
+  @Default([])
+  @Column(DataType.ARRAY(DataType.STRING))
+  permissions: string[];
 
   @Default('physical')
   @Column
@@ -67,6 +69,7 @@ export class UserEntity extends Model<UserEntity> {
   @Default('USER')
   @Column
   role: string;
-}
 
-export { UserPermissionEntity };
+  @HasOne(() => SettingsEntity)
+  settingsEntity: SettingsEntity;
+}
