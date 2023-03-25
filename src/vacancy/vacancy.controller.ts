@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { Put } from '@nestjs/common/decorators';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtUserAuthGuard } from 'src/auth/guard/jwt-user-auth.guard';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -43,24 +44,20 @@ export class VacancyController {
   @UseGuards(JwtUserAuthGuard)
   @Patch(':href')
   async update(@Param() param, @Body() dto: UpdateVacancyDto, @Request() req) {
-    return await this.vacancyService.update(param, dto, req);
+    return await this.vacancyService.update(param.href, dto, req);
   }
 
   @ApiOperation({ summary: 'Удаление вакансии' })
   @UseGuards(JwtUserAuthGuard)
   @Delete(':href')
   async delete(@Param() param, @Request() req) {
-    return await this.vacancyService.delete(param, req);
+    return await this.vacancyService.delete(param.href, req);
   }
 
   @ApiOperation({ summary: 'Спрятать/показать вакансию' })
   @UseGuards(JwtUserAuthGuard)
-  @Patch(':href')
-  async hideOrShow(
-    @Param() param,
-    @Body() dto: UpdateVacancyDto,
-    @Request() req,
-  ) {
-    return await this.vacancyService.update(param, dto, req);
+  @Put(':href')
+  async hideOrShow(@Param() param, @Request() req) {
+    return await this.vacancyService.hideOrShow(param.href, req);
   }
 }

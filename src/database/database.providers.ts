@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { ArticleEntity } from 'src/article/article.entity';
 import { CategoryEntity } from 'src/category/category.entity';
 import { ReviewEntity } from 'src/review/review.entity';
+import { VacancyEntity } from 'src/vacancy/vacancy.entity';
 import { SettingsEntity } from 'src/settings/settings.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
@@ -32,6 +33,7 @@ export const databaseProviders = [
         ReviewEntity,
         SettingsEntity,
         CategoryEntity,
+        VacancyEntity,
       ]);
       await sequelize.sync();
       return sequelize;

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   BadRequestException,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common/exceptions';
 import trans from 'src/vendor/Trans';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -32,10 +33,10 @@ export class VacancyService {
       throw new ForbiddenException('У вас нет разрешений на это действие');
     }
     const vacancy = {
-      authorId: req.user.userId,
+      authorId: req.user.id,
       avatar: req.user.avatar,
       title: dto.title,
-      href: trans(dto.title),
+      href: trans(dto.title.split(' ').join('').toLowerCase()),
       category: dto.category,
       region: dto.region,
       body: dto.body,
@@ -48,6 +49,9 @@ export class VacancyService {
     const updatingVacancy = await this.vacancyRepository.findOne({
       where: { href },
     });
+    if (!updatingVacancy) {
+      throw new NotFoundException('Вакансия не найдена');
+    }
     if (
       !(
         req.user.id === updatingVacancy.authorId ||
@@ -58,7 +62,7 @@ export class VacancyService {
     }
     const vacancy = {
       title: dto.title,
-      href: trans(dto.title),
+      href: trans(dto.title.split(' ').join('').toLowerCase()),
       category: dto.category,
       timestamp: dto.timestamp,
       region: dto.region,
@@ -75,30 +79,35 @@ export class VacancyService {
     const deletingVacancy = await this.vacancyRepository.findOne({
       where: { href },
     });
+    if (!deletingVacancy) {
+      throw new NotFoundException('Вакансия не найдена');
+    }
     if (
       !(
         req.user.id === deletingVacancy.authorId ||
         req.user.role === ('ADMIN' || 'ROOT')
       )
     ) {
-      throw new ForbiddenException('У вас недостаточно прав доступа');
+      throw new ForbiddenException('У вас нет прав доступа');
     }
-    const deletedVacancy = await deletingVacancy.destroy();
-    await this.vacancyRepository.sync();
-    return deletedVacancy;
+    await deletingVacancy.destroy();
+    this.vacancyRepository.sync();
   }
 
   async hideOrShow(href: string, req: any) {
     const vacancy = await this.vacancyRepository.findOne({
       where: { href },
     });
+    if (!vacancy) {
+      throw new NotFoundException('Вакансия не найдена');
+    }
     if (
       !(
         req.user.id === vacancy.authorId ||
         req.user.role === ('ADMIN' || 'ROOT')
       )
     ) {
-      throw new ForbiddenException('У вас недостаточно прав доступа');
+      throw new ForbiddenException();
     }
     if (vacancy.show) {
       const updatedVacancy = await vacancy.update({ show: false });

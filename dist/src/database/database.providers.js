@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.databaseProviders = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const article_entity_1 = require("../article/article.entity");
+const category_entity_1 = require("../category/category.entity");
 const review_entity_1 = require("../review/review.entity");
+const vacancy_entity_1 = require("../vacancy/vacancy.entity");
 const settings_entity_1 = require("../settings/settings.entity");
 const user_entity_1 = require("../user/user.entity");
 const constants_1 = require("../../constants");
@@ -32,6 +34,8 @@ exports.databaseProviders = [
                 article_entity_1.ArticleEntity,
                 review_entity_1.ReviewEntity,
                 settings_entity_1.SettingsEntity,
+                category_entity_1.CategoryEntity,
+                vacancy_entity_1.VacancyEntity,
             ]);
             await sequelize.sync();
             return sequelize;
