@@ -1,7 +1,9 @@
 import { Sequelize } from 'sequelize-typescript';
 import { ArticleEntity } from 'src/article/article.entity';
+import { CategoryEntity } from 'src/category/category.entity';
 import { ReviewEntity } from 'src/review/review.entity';
-import { UserEntity, UserPermissionEntity } from 'src/user/user.entity';
+import { SettingsEntity } from 'src/settings/settings.entity';
+import { UserEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
 import { databaseConfig } from './database.config';
 
@@ -26,9 +28,10 @@ export const databaseProviders = [
       const sequelize = new Sequelize(config);
       sequelize.addModels([
         UserEntity,
-        UserPermissionEntity,
         ArticleEntity,
         ReviewEntity,
+        SettingsEntity,
+        CategoryEntity,
       ]);
       await sequelize.sync();
       return sequelize;
