@@ -1,4 +1,3 @@
-import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
 
 @Table

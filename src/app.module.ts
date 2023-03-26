@@ -7,6 +7,9 @@ import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
 import { VacancyModule } from './vacancy/vacancy.module';
 import { CategoryModule } from './category/category.module';
+import { VacancyRespondController } from './vacancy-respond/vacancy-respond.controller';
+import { VacancyRespondService } from './vacancy-respond/vacancy-respond.service';
+import { VacancyRespondModule } from './vacancy-respond/vacancy-respond.module';
 
 @Module({
   imports: [
@@ -18,6 +21,7 @@ import { CategoryModule } from './category/category.module';
     ReviewModule,
     VacancyModule,
     CategoryModule,
+    VacancyRespondModule,
   ],
   controllers: [],
   providers: [],

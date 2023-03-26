@@ -16,6 +16,7 @@ const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
 const vacancy_module_1 = require("./vacancy/vacancy.module");
 const category_module_1 = require("./category/category.module");
+const vacancy_respond_module_1 = require("./vacancy-respond/vacancy-respond.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -29,6 +30,7 @@ AppModule = __decorate([
             review_module_1.ReviewModule,
             vacancy_module_1.VacancyModule,
             category_module_1.CategoryModule,
+            vacancy_respond_module_1.VacancyRespondModule,
         ],
         controllers: [],
         providers: [],

@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Put } from '@nestjs/common/decorators';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAdminAuthGuard } from 'src/auth/guard/jwt-admin-auth.guard';
 import { JwtUserAuthGuard } from 'src/auth/guard/jwt-user-auth.guard';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
@@ -22,6 +23,7 @@ export class VacancyController {
   constructor(private vacancyService: VacancyService) {}
 
   @ApiOperation({ summary: 'Получение списка вакансий' })
+  @UseGuards(JwtAdminAuthGuard)
   @Get()
   async findAll() {
     return await this.vacancyService.findAll();

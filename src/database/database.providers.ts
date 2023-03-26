@@ -7,6 +7,7 @@ import { SettingsEntity } from 'src/settings/settings.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
 import { databaseConfig } from './database.config';
+import { VacancyRespondEntity } from 'src/vacancy-respond/vacancy-respond.entity';
 
 export const databaseProviders = [
   {
@@ -34,6 +35,7 @@ export const databaseProviders = [
         SettingsEntity,
         CategoryEntity,
         VacancyEntity,
+        VacancyRespondEntity,
       ]);
       await sequelize.sync();
       return sequelize;

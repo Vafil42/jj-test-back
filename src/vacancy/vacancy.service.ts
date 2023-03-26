@@ -120,3 +120,4 @@ export class VacancyService {
     }
   }
 }
+export { VacancyEntity };
