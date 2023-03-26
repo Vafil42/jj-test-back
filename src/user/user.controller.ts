@@ -5,6 +5,8 @@ import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { UserService } from './user.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { JwtAdminAuthGuard } from 'src/auth/guard/jwt-admin-auth.guard';
+import { JwtUserAuthGuard } from 'src/auth/guard/jwt-user-auth.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @ApiTags('Запросы Admin')
 @Controller('user')
@@ -43,6 +45,13 @@ export class UserController {
   @Delete(':id')
   async delete(@Param() param, @Request() req) {
     return await this.userService.delete(param.id, req.user.role);
+  }
+
+  @UseGuards(JwtUserAuthGuard)
+  @ApiOperation({ summary: 'Смена пароля' })
+  @Put('/change-password')
+  async changePassword(@Body() dto: ChangePasswordDto, @Request() req) {
+    return await this.userService.changePassword(dto, req);
   }
 
   @UseGuards(JwtAdminAuthGuard)

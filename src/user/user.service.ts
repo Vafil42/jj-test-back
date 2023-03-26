@@ -3,6 +3,7 @@ import {
   Inject,
   ForbiddenException,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
@@ -11,6 +12,7 @@ import { UpdateUserDto } from '../auth/dto/update-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
 import { SettingsService } from 'src/settings/settings.service';
 import { SettingsEntity } from 'src/settings/settings.entity';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UserService {
@@ -22,7 +24,7 @@ export class UserService {
   ) {}
 
   async findAll() {
-    return await this.userRepository.findAll({include: [SettingsEntity]});
+    return await this.userRepository.findAll({ include: [SettingsEntity] });
   }
 
   async create(dto: CreateUserDto) {
@@ -38,7 +40,7 @@ export class UserService {
     }
 
     const user = await this.userRepository.create(dto);
-    const settings = await this.settingsService.create(user)
+    const settings = await this.settingsService.create(user);
     await this.userRepository.sync();
     if (user) {
       return user;
@@ -88,12 +90,16 @@ export class UserService {
   }
 
   async findById(id: number) {
-    const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
+    const user = await this.userRepository.findByPk(id, {
+      include: [SettingsEntity],
+    });
     return user;
   }
 
   async loginUser(id: number) {
-    const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
+    const user = await this.userRepository.findByPk(id, {
+      include: [SettingsEntity],
+    });
     if (user) {
       return user;
     }
@@ -118,11 +124,33 @@ export class UserService {
 
   async validateUser(dto: LoginUserDto) {
     const { email, password } = dto;
-    const user = await this.userRepository.findOne({ where: { email }, include: [SettingsEntity]});
+    const user = await this.userRepository.findOne({
+      where: { email },
+      include: [SettingsEntity],
+    });
     if (user && (await this.jwtCheak(user, password)) === true) {
       return user;
     } else {
       return null;
+    }
+  }
+
+  async changePassword(dto: ChangePasswordDto, req: any) {
+    const password = dto.password;
+    let newPassword = dto.newPassword;
+    const user = await this.userRepository.findOne({
+      where: { id: req.user.id },
+    });
+    if (user && (await this.jwtCheak(user, password))) {
+      if (password !== newPassword) {
+        newPassword = this.jwtService.sign(newPassword);
+        await user.update({ password: newPassword });
+        await this.userRepository.sync();
+      } else {
+        throw new BadRequestException('Текущий и новый пароли совпадают');
+      }
+    } else {
+      throw new UnauthorizedException('Введен неверный пароль');
     }
   }
 
