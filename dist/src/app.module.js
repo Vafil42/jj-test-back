@@ -14,6 +14,8 @@ const user_auth_module_1 = require("./auth/user.auth.module");
 const database_module_1 = require("./database/database.module");
 const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
+const category_module_1 = require("./category/category.module");
+const admin_module_1 = require("./admin/admin.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -25,6 +27,8 @@ AppModule = __decorate([
             user_module_1.UserModule,
             user_auth_module_1.UserAuthModule,
             review_module_1.ReviewModule,
+            category_module_1.CategoryModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [],
         providers: [],
