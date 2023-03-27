@@ -1,8 +1,11 @@
+import { IsNotEmpty } from 'class-validator';
 import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
+import { Col } from 'sequelize/types/utils';
 
 @Table
 export class VacancyEntity extends Model<VacancyEntity> {
   // required, unique
+  @IsNotEmpty()
   @Unique
   @Column
   title: string;
@@ -12,6 +15,7 @@ export class VacancyEntity extends Model<VacancyEntity> {
   href: string;
 
   // required
+  @IsNotEmpty()
   @Column
   authorId: number;
 
@@ -54,4 +58,8 @@ export class VacancyEntity extends Model<VacancyEntity> {
   @Default(false)
   @Column
   requiredExp: boolean;
+
+  @Default(false)
+  @Column
+  moderate: boolean;
 }

@@ -29,6 +29,12 @@ export class VacancyController {
     return await this.vacancyService.findAll();
   }
 
+  @ApiOperation({ summary: 'Получение списка неодобренных вакансий' })
+  @Get('/not-moderated')
+  async findNotModerated() {
+    return await this.vacancyService.findNotModerated();
+  }
+
   @ApiOperation({ summary: 'Получение вакансии по ссылке' })
   @Get(':href')
   async findByHref(@Param() param) {
@@ -61,5 +67,12 @@ export class VacancyController {
   @Put(':href')
   async hideOrShow(@Param() param, @Request() req) {
     return await this.vacancyService.hideOrShow(param.href, req);
+  }
+
+  @UseGuards(JwtAdminAuthGuard)
+  @ApiOperation({ summary: 'Одобрение вакансий' })
+  @Put('/moderate/:href')
+  async moderate(@Param() param) {
+    return await this.vacancyService.moderate(param.href);
   }
 }

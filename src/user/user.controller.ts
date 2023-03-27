@@ -19,6 +19,12 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  @ApiOperation({ summary: 'Получение списка неодобренных пользователей' })
+  @Get('/not-moderated')
+  async findNotModerated() {
+    return await this.userService.findNotModerated();
+  }
+
   @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Получение пользователя по id' })
   @Get(':id')
@@ -59,5 +65,12 @@ export class UserController {
   @Put(':id')
   async update(@Param() param, @Body() dto: UpdateUserDto, @Request() req) {
     return await this.userService.update(param.id, dto, req.user.role);
+  }
+
+  @UseGuards(JwtAdminAuthGuard)
+  @ApiOperation({ summary: 'Одобрение юр. лиц' })
+  @Put('/moderate/:id')
+  async moderate(@Param() param) {
+    return await this.userService.moderate(param.id);
   }
 }

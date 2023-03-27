@@ -31,7 +31,6 @@ export class UserService {
   async create(dto: CreateUserDto) {
     try {
       dto.password = await this.jwtService.sign(dto.password);
-
       if (
         (
           await this.userRepository.findAndCountAll({
@@ -45,6 +44,7 @@ export class UserService {
       }
 
       const user = await this.userRepository.create(dto);
+      if (user.implication === 'physical') user.moderate = true;
       const settings = await this.settingsService.create(user);
       await this.userRepository.sync();
       if (user) {
@@ -54,6 +54,10 @@ export class UserService {
     } catch (e) {
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
+  }
+
+  async findNotModerated() {
+    return await this.userRepository.findAll({ where: { moderate: false } });
   }
 
   async ban(id: number, role: string) {
@@ -164,21 +168,41 @@ export class UserService {
   }
 
   async changePassword(dto: ChangePasswordDto, req: any) {
-    const password = dto.password;
-    let newPassword = dto.newPassword;
-    const user = await this.userRepository.findOne({
-      where: { id: req.user.id },
-    });
-    if (user && (await this.jwtCheck(user, password))) {
-      if (password !== newPassword) {
-        newPassword = this.jwtService.sign(newPassword);
-        await user.update({ password: newPassword });
-        await this.userRepository.sync();
+    try {
+      const password = dto.password;
+      let newPassword = dto.newPassword;
+      const user = await this.userRepository.findOne({
+        where: { id: req.user.id },
+      });
+      if (user && (await this.jwtCheck(user, password))) {
+        if (password !== newPassword) {
+          newPassword = this.jwtService.sign(newPassword);
+          await user.update({ password: newPassword });
+          await this.userRepository.sync();
+        } else {
+          throw new BadRequestException('Текущий и новый пароли совпадают');
+        }
       } else {
-        throw new BadRequestException('Текущий и новый пароли совпадают');
+        throw new UnauthorizedException('Введен неверный пароль');
       }
-    } else {
-      throw new UnauthorizedException('Введен неверный пароль');
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    }
+  }
+
+  async moderate(id: number) {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (user.moderate) {
+        throw new BadRequestException(
+          'Этому пользователю не требуется модерация',
+        );
+      } else {
+        await user.update({ moderate: true });
+        await this.userRepository.sync();
+      }
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
 
