@@ -5,7 +5,9 @@ import { UserAuthModule } from './auth/user.auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { VacancyModule } from './vacancy/vacancy.module';
 import { CategoryModule } from './category/category.module';
+import { VacancyRespondModule } from './vacancy-respond/vacancy-respond.module';
 import { AdminModule } from './admin/admin.module';
 
 @Module({
@@ -16,8 +18,10 @@ import { AdminModule } from './admin/admin.module';
     UserModule,
     UserAuthModule,
     ReviewModule,
+    VacancyModule,
     CategoryModule,
     AdminModule,
+    VacancyRespondModule,
   ],
   controllers: [],
   providers: [],
