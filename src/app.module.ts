@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CategoryModule } from './category/category.module';
     UserAuthModule,
     ReviewModule,
     CategoryModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],
