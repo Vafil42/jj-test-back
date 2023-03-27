@@ -1,20 +1,17 @@
+import { JSON } from 'sequelize';
 import {
   Table,
   Column,
   Model,
   Default,
   Unique,
-  HasMany,
+  HasOne,
+  DataType,
 } from 'sequelize-typescript';
-import { UserPermissionEntity } from './user.permissions.entity';
+import { SettingsEntity } from 'src/settings/settings.entity';
 
 @Table
 export class UserEntity extends Model<UserEntity> {
-  //    @AutoIncrement
-  //    @PrimaryKey
-  //    @Column
-  //    id: number;
-
   @Default(null)
   @Column
   lastname: string;
@@ -34,20 +31,17 @@ export class UserEntity extends Model<UserEntity> {
   @Column
   banned: boolean;
 
-  @HasMany(() => UserPermissionEntity)
-  permissions: UserPermissionEntity[];
+  @Default([])
+  @Column(DataType.ARRAY(DataType.STRING))
+  permissions: string[];
 
   @Default('physical')
   @Column
   implication: string;
 
-  @Default(0)
-  @Column
-  age: number;
-
   @Default(null)
   @Column
-  birsday: string;
+  birthday: string;
 
   @Default(null)
   @Column
@@ -56,6 +50,9 @@ export class UserEntity extends Model<UserEntity> {
   @Default(null)
   @Column
   inn: string;
+
+  @Column(JSON)
+  region: JSON;
 
   @Default(null)
   @Column
@@ -72,6 +69,7 @@ export class UserEntity extends Model<UserEntity> {
   @Default('USER')
   @Column
   role: string;
-}
 
-export { UserPermissionEntity };
+  @HasOne(() => SettingsEntity)
+  settingsEntity: SettingsEntity;
+}

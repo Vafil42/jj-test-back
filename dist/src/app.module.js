@@ -9,18 +9,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const article_module_1 = require("./article/article.module");
 const user_auth_module_1 = require("./auth/user.auth.module");
 const database_module_1 = require("./database/database.module");
+const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
+const category_module_1 = require("./category/category.module");
+const admin_module_1 = require("./admin/admin.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
+            article_module_1.ArticleModule,
             database_module_1.DatabaseModule,
             user_module_1.UserModule,
             user_auth_module_1.UserAuthModule,
+            review_module_1.ReviewModule,
+            category_module_1.CategoryModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [],
         providers: [],

@@ -7,12 +7,12 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwtUser') {
   constructor(private userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWTKEY,
+      secretOrKey: process.env.JWT_SECRET,
     });
   }
 
