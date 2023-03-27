@@ -66,24 +66,24 @@ export class UserService {
   async ban(id: number, role: string) {
     try {
       const user = await this.userRepository.findByPk(id);
-      this.permissionsCheck(user.role, role);
+      this.permissionsCheckOnlyAdmin(user.role, role);
       await user.update({ banned: true });
 
       await this.userRepository.sync();
     } catch (e) {
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+      throw new InternalServerErrorException('Iternal server error', e);
     }
   }
 
   async update(id: number, dto: UpdateUserDto, subUser: UserEntity) {
     try {
       const user = await this.userRepository.findByPk(id);
-      this.permissionsCheck(user.role);
+      this.permissionsCheckAdminOrUser(subUser.role, subUser.id, id);
       await user.update(dto);
       await this.userRepository.sync();
       return user;
     } catch (e) {
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+      throw new InternalServerErrorException('Iternal server error', e);
     }
   }
 
