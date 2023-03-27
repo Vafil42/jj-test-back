@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotImplementedException } from '@nestjs/common';
 import trans from 'src/vendor/Trans';
 import { ArticleEntity } from './article.entity';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -10,6 +10,7 @@ export class ArticleService {
     private articleRepository: typeof ArticleEntity,
   ) {}
   async create(dto: CreateArticleDto, req: any) {
+    try {
     const href = trans(dto.title);
     const article = {
       title: dto.title,
@@ -19,18 +20,22 @@ export class ArticleService {
       authorId: req.user.id,
     };
     return await this.articleRepository.create(article);
+  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
   async findOne(href) {
+    try {
     if (this.articleRepository.findOne({ where: { href } })) {
       return this.articleRepository.findOne({ where: { href } });
     } else {
       throw new BadRequestException('there is no such article');
     }
+  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
   async findAll() {
     return await this.articleRepository.findAll();
   }
   async delete(id) {
+    try {
     const article = await this.articleRepository.findByPk(id);
     if (article) {
       await article.destroy();
@@ -38,13 +43,16 @@ export class ArticleService {
     } else {
       throw new BadRequestException('there is no such article');
     }
+  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
   async update(id, dto) {
+    try {
     const article = await this.articleRepository.findByPk(id);
     if (article) {
       return await article.update(dto);
     } else {
       throw new BadRequestException('there is no such article');
     }
+  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 }

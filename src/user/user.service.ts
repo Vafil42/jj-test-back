@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   BadRequestException,
   UnauthorizedException,
+  NotImplementedException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
@@ -28,110 +29,137 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto) {
-    dto.password = await this.jwtService.sign(dto.password);
-    if (
-      (
-        await this.userRepository.findAndCountAll({
-          where: { email: dto.email },
-        })
-      ).count != 0
-    ) {
-      throw new BadRequestException('Пользователь таким email уже существует');
-    }
+    try {
+      dto.password = await this.jwtService.sign(dto.password);
 
-    const user = await this.userRepository.create(dto);
-    const settings = await this.settingsService.create(user);
-    await this.userRepository.sync();
-    if (user) {
-      return user;
+      if (
+        (
+          await this.userRepository.findAndCountAll({
+            where: { email: dto.email },
+          })
+        ).count != 0
+      ) {
+        throw new BadRequestException(
+          'Пользователь таким email уже существует',
+        );
+      }
+
+      const user = await this.userRepository.create(dto);
+      const settings = await this.settingsService.create(user);
+      await this.userRepository.sync();
+      if (user) {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
   }
 
   async ban(id: number, role: string) {
-    const user = await this.userRepository.findByPk(id);
-    if (
-      role === 'USER' ||
-      (role === 'ADMIN' && user.role === 'ADMIN') ||
-      (role === 'ADMIN' && user.role === 'ROOT')
-    ) {
-      throw new ForbiddenException('У вас нет прав доступа');
-    }
-    await user.update({ banned: true });
+    try {
+      const user = await this.userRepository.findByPk(id);
+      this.permissionsCheck(user.role, role);
+      await user.update({ banned: true });
 
-    await this.userRepository.sync();
+      await this.userRepository.sync();
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    }
   }
 
   async update(id: number, dto: UpdateUserDto, role: string) {
-    const user = await this.userRepository.findByPk(id);
-    if (
-      role === 'USER' ||
-      (role === 'ADMIN' && user.role === 'ADMIN') ||
-      (role === 'ADMIN' && user.role === 'ROOT')
-    ) {
-      throw new ForbiddenException('У вас нет прав доступа');
+    try {
+      const user = await this.userRepository.findByPk(id);
+      this.permissionsCheck(user.role, role);
+      await user.update(dto);
+      await this.userRepository.sync();
+      return user;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    await user.update(dto);
-    await this.userRepository.sync();
-    return user;
   }
 
   async delete(id: number, role: string) {
-    const user = await this.userRepository.findByPk(id);
-    if (
-      role === 'USER' ||
-      (role === 'ADMIN' && user.role === 'ADMIN') ||
-      (role === 'ADMIN' && user.role === 'ROOT')
-    ) {
-      throw new ForbiddenException('У вас нет прав доступа');
+    try {
+      const user = await this.userRepository.findByPk(id);
+      if (
+        role === 'USER' ||
+        (role === 'ADMIN' && user.role === 'ADMIN') ||
+        (role === 'ADMIN' && user.role === 'ROOT')
+      ) {
+        throw new ForbiddenException('У вас нет прав доступа');
+      }
+      await user.destroy();
+      this.userRepository.sync();
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    await user.destroy();
-    this.userRepository.sync();
   }
 
   async findById(id: number) {
-    const user = await this.userRepository.findByPk(id, {
-      include: [SettingsEntity],
-    });
-    return user;
+    try {
+      const user = await this.userRepository.findByPk(id, {
+        include: [SettingsEntity],
+      });
+      return user;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    }
   }
 
   async loginUser(id: number) {
-    const user = await this.userRepository.findByPk(id, {
-      include: [SettingsEntity],
-    });
-    if (user) {
-      return user;
+    try {
+      const user = await this.userRepository.findByPk(id, {
+        include: [SettingsEntity],
+      });
+      if (user) {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
   }
 
   async loginAdmin(id: number) {
-    const user = await this.userRepository.findByPk(id);
-    if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
-      return user;
+    try {
+      const user = await this.userRepository.findByPk(id);
+      if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
   }
 
   async loginRoot(id: number) {
-    const user = await this.userRepository.findByPk(id);
-    if (user && user.role === 'ROOT') {
-      return user;
+    try {
+      const user = await this.userRepository.findByPk(id);
+      if (user && user.role === 'ROOT') {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
   }
 
   async validateUser(dto: LoginUserDto) {
-    const { email, password } = dto;
-    const user = await this.userRepository.findOne({
-      where: { email },
-      include: [SettingsEntity],
-    });
-    if (user && (await this.jwtCheak(user, password)) === true) {
-      return user;
-    } else {
-      return null;
+    try {
+      const { email, password } = dto;
+      const user = await this.userRepository.findOne({
+        where: { email },
+        include: [SettingsEntity],
+      });
+      if (user && (await this.jwtCheck(user, password)) === true) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
 
@@ -141,7 +169,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id: req.user.id },
     });
-    if (user && (await this.jwtCheak(user, password))) {
+    if (user && (await this.jwtCheck(user, password))) {
       if (password !== newPassword) {
         newPassword = this.jwtService.sign(newPassword);
         await user.update({ password: newPassword });
@@ -154,11 +182,22 @@ export class UserService {
     }
   }
 
-  private async jwtCheak(user: UserEntity, password: string) {
+  private async jwtCheck(user: UserEntity, password: string) {
     if (this.jwtService.sign(password) === user.password) {
       return true;
     } else {
       return null;
     }
+  }
+
+  private permissionsCheck(userRole: string, role: string) {
+    if (
+      role === 'USER' ||
+      (role === 'ADMIN' && userRole === 'ADMIN') ||
+      (role === 'ADMIN' && userRole === 'ROOT')
+    ) {
+      throw new ForbiddenException('У вас нет прав доступа');
+    }
+    return;
   }
 }
