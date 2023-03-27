@@ -1,6 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
-import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
-import { Col } from 'sequelize/types/utils';
+import {
+  Column,
+  DataType,
+  Default,
+  Model,
+  Table,
+  Unique,
+} from 'sequelize-typescript';
 
 @Table
 export class VacancyEntity extends Model<VacancyEntity> {
@@ -25,7 +31,7 @@ export class VacancyEntity extends Model<VacancyEntity> {
   avatar: string;
 
   // default = true
-  @Default(true)
+  @Default(false)
   @Column
   show: boolean;
 
@@ -35,9 +41,9 @@ export class VacancyEntity extends Model<VacancyEntity> {
   category: string;
 
   // default = null
-  @Default(null)
-  @Column
-  timestamp: string;
+  @Default([])
+  @Column(DataType.ARRAY(DataType.STRING))
+  timestamp: string[];
 
   // default = 6700
   @Default(6700)

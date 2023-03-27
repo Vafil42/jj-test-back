@@ -23,14 +23,14 @@ export class VacancyController {
   constructor(private vacancyService: VacancyService) {}
 
   @ApiOperation({ summary: 'Получение списка вакансий' })
-  @UseGuards(JwtAdminAuthGuard)
   @Get()
   async findAll() {
     return await this.vacancyService.findAll();
   }
 
+  @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Получение списка неодобренных вакансий' })
-  @Get('/not-moderated')
+  @Get('not-moderated')
   async findNotModerated() {
     return await this.vacancyService.findNotModerated();
   }

@@ -44,7 +44,9 @@ export class UserService {
       }
 
       const user = await this.userRepository.create(dto);
-      if (user.implication === 'physical') user.moderate = true;
+      if (user.implication === 'physical') {
+        this.moderate(user.id);
+      }
       const settings = await this.settingsService.create(user);
       await this.userRepository.sync();
       if (user) {
@@ -97,6 +99,7 @@ export class UserService {
       await user.destroy();
       this.userRepository.sync();
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
@@ -194,9 +197,7 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({ where: { id } });
       if (user.moderate) {
-        throw new BadRequestException(
-          'Этому пользователю не требуется модерация',
-        );
+        throw new BadRequestException('Этот пользователь уже прошел проверку');
       } else {
         await user.update({ moderate: true });
         await this.userRepository.sync();

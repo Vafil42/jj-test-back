@@ -29,6 +29,7 @@ export class VacancyService {
         throw new BadRequestException('Вакансия не найдена');
       }
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
@@ -56,6 +57,7 @@ export class VacancyService {
       };
       return await this.vacancyRepository.create(vacancy);
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
@@ -92,6 +94,7 @@ export class VacancyService {
       await this.vacancyRepository.sync();
       return updatedVacancy;
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
@@ -117,6 +120,7 @@ export class VacancyService {
       await deletingVacancy.destroy();
       this.vacancyRepository.sync();
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
@@ -129,24 +133,31 @@ export class VacancyService {
       if (!vacancy) {
         throw new NotFoundException('Вакансия не найдена');
       }
-      if (
-        !(
-          req.user.id === vacancy.authorId ||
-          req.user.role === ('ADMIN' || 'ROOT')
-        )
-      ) {
-        throw new ForbiddenException();
-      }
-      if (vacancy.show) {
-        const updatedVacancy = await vacancy.update({ show: false });
-        await this.vacancyRepository.sync();
-        return updatedVacancy;
+      if (!vacancy.moderate) {
+        throw new ForbiddenException(
+          'Вакансия отправлена на проверку модераторам. Попробуйте позже',
+        );
       } else {
-        const updatedVacancy = await vacancy.update({ show: true });
-        await this.vacancyRepository.sync();
-        return updatedVacancy;
+        if (
+          !(
+            req.user.id === vacancy.authorId ||
+            req.user.role === ('ADMIN' || 'ROOT')
+          )
+        ) {
+          throw new ForbiddenException();
+        }
+        if (vacancy.show) {
+          const updatedVacancy = await vacancy.update({ show: false });
+          await this.vacancyRepository.sync();
+          return updatedVacancy;
+        } else {
+          const updatedVacancy = await vacancy.update({ show: true });
+          await this.vacancyRepository.sync();
+          return updatedVacancy;
+        }
       }
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
@@ -155,14 +166,13 @@ export class VacancyService {
     try {
       const vacancy = await this.vacancyRepository.findOne({ where: { href } });
       if (vacancy.moderate) {
-        throw new BadRequestException(
-          'Этому пользователю не требуется модерация',
-        );
+        throw new BadRequestException('Эта вакансия уже прошла проверку');
       } else {
-        await vacancy.update({ moderate: true });
+        await vacancy.update({ moderate: true, show: true });
         await this.vacancyRepository.sync();
       }
     } catch (e) {
+      console.log(e);
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }

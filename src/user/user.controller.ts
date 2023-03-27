@@ -19,6 +19,7 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Получение списка неодобренных пользователей' })
   @Get('/not-moderated')
   async findNotModerated() {
@@ -69,7 +70,7 @@ export class UserController {
 
   @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Одобрение юр. лиц' })
-  @Put('/moderate/:id')
+  @Put('moderate/:id')
   async moderate(@Param() param) {
     return await this.userService.moderate(param.id);
   }

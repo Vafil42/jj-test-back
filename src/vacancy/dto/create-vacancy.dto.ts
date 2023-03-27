@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsArray } from 'sequelize-typescript';
 
 export class CreateVacancyDto {
   @IsString()
@@ -11,17 +12,23 @@ export class CreateVacancyDto {
 
   @IsString()
   @ApiProperty({
+    description: 'Имя и адрес изображения',
+    example: 'src/img/avatar.png',
+  })
+  avatar: string;
+
+  @IsString()
+  @ApiProperty({
     description: 'Категория вакансии',
-    enum: ['homeTask'],
     example: 'homeTask',
   })
   category: string;
 
-  @IsString()
   @ApiProperty({
-    description: '',
+    description: 'Временные рамки вакансии',
+    example: ['01.04.2023', '08.04.2023'],
   })
-  timestamp: string;
+  timestamp: string[];
 
   @IsNumber()
   @ApiProperty({
