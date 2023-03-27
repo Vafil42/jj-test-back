@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   BadRequestException,
   NotImplementedException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UserEntity } from './user.entity';
@@ -47,27 +48,27 @@ export class UserService {
       return user;
     }
     return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async ban(id: number, role: string) {
     try {
     const user = await this.userRepository.findByPk(id);
-    this.permissionsCheck(user.role, role);
+    this.permissionsCheckOnlyAdmin(user.role, role);
     await user.update({ banned: true });
 
     await this.userRepository.sync();
-    } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+    } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
-  async update(id: number, dto: UpdateUserDto, role: string) {
+  async update(id: number, dto: UpdateUserDto, subUser: UserEntity) {
     try {
     const user = await this.userRepository.findByPk(id);
-    this.permissionsCheck(user.role, role);
+    this.permissionsCheckAdminOrUser(subUser.role, subUser.id, id);
     await user.update(dto);
     await this.userRepository.sync();
     return user;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async delete(id: number, role: string) {
@@ -82,14 +83,14 @@ export class UserService {
     }
     await user.destroy();
     this.userRepository.sync();
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async findById(id: number) {
     try {
     const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
     return user;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async loginUser(id: number) {
@@ -99,7 +100,7 @@ export class UserService {
       return user;
     }
     return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async loginAdmin(id: number) {
@@ -109,7 +110,7 @@ export class UserService {
       return user;
     }
     return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async loginRoot(id: number) {
@@ -119,7 +120,7 @@ export class UserService {
       return user;
     }
     return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   async validateUser(dto: LoginUserDto) {
@@ -131,7 +132,7 @@ export class UserService {
     } else {
       return null;
     }
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 
   private async jwtCheсk(user: UserEntity, password: string) {
@@ -142,13 +143,22 @@ export class UserService {
     }
   }
 
-  private permissionsCheck(userRole: string, role: string) {
+  private permissionsCheckOnlyAdmin(userRole: string, role: string) {
     if (
       role === 'USER' ||
       (role === 'ADMIN' && userRole === 'ADMIN') ||
       (role === 'ADMIN' && userRole === 'ROOT')
     ) {
-      throw new ForbiddenException('У вас нет прав доступа');
+      throw new ForbiddenException('Forbidden', 'У вас недостаточно прав доступа')
+    }
+    return;
+  }
+
+  private permissionsCheckAdminOrUser(role: string, id: number, userId: number) {
+    if (!(
+      role === ('ADMIN' || 'ROOT') || id === userId
+    )) {
+      throw new ForbiddenException('Forbidden', 'У вас недостаточно прав доступа')
     }
     return;
   }

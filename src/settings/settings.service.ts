@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotImplementedException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, NotImplementedException } from '@nestjs/common';
 import { UserEntity } from 'src/user/user.entity';
 import { SettingsEntity } from './settings.entity';
 
@@ -16,6 +16,6 @@ export class SettingsService {
             userId: user.id,
             userEntity: user,
         })
-    } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+    } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
     }
 }

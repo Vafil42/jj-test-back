@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotImplementedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotImplementedException } from '@nestjs/common';
 import trans from 'src/vendor/Trans';
 import { ArticleEntity } from './article.entity';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -20,7 +20,7 @@ export class ArticleService {
       authorId: req.user.id,
     };
     return await this.articleRepository.create(article);
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
   async findOne(href) {
     try {
@@ -29,7 +29,7 @@ export class ArticleService {
     } else {
       throw new BadRequestException('there is no such article');
     }
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
   async findAll() {
     return await this.articleRepository.findAll();
@@ -43,7 +43,7 @@ export class ArticleService {
     } else {
       throw new BadRequestException('there is no such article');
     }
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
   async update(id, dto) {
     try {
@@ -53,6 +53,6 @@ export class ArticleService {
     } else {
       throw new BadRequestException('there is no such article');
     }
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+  } catch(e) {throw new InternalServerErrorException('Iternal server error', e)}
   }
 }
