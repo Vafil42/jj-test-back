@@ -9,6 +9,7 @@ import { VacancyModule } from './vacancy/vacancy.module';
 import { CategoryModule } from './category/category.module';
 import { VacancyRespondModule } from './vacancy-respond/vacancy-respond.module';
 import { AdminModule } from './admin/admin.module';
+import { ClaimModule } from './claim/claim.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AdminModule } from './admin/admin.module';
     CategoryModule,
     AdminModule,
     VacancyRespondModule,
+    ClaimModule,
   ],
   controllers: [],
   providers: [],

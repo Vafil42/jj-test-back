@@ -11,6 +11,7 @@ const user_entity_1 = require("../user/user.entity");
 const constants_1 = require("../../constants");
 const database_config_1 = require("./database.config");
 const vacancy_respond_entity_1 = require("../vacancy-respond/vacancy-respond.entity");
+const claim_entity_1 = require("../claim/claim.entity");
 exports.databaseProviders = [
     {
         provide: constants_1.SEQUELIZE,
@@ -38,6 +39,7 @@ exports.databaseProviders = [
                 category_entity_1.CategoryEntity,
                 vacancy_entity_1.VacancyEntity,
                 vacancy_respond_entity_1.VacancyRespondEntity,
+                claim_entity_1.ClaimEntity,
             ]);
             await sequelize.sync();
             return sequelize;

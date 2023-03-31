@@ -8,6 +8,7 @@ import { UserEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
 import { databaseConfig } from './database.config';
 import { VacancyRespondEntity } from 'src/vacancy-respond/vacancy-respond.entity';
+import { ClaimEntity } from 'src/claim/claim.entity';
 
 export const databaseProviders = [
   {
@@ -36,6 +37,7 @@ export const databaseProviders = [
         CategoryEntity,
         VacancyEntity,
         VacancyRespondEntity,
+        ClaimEntity,
       ]);
       await sequelize.sync();
       return sequelize;

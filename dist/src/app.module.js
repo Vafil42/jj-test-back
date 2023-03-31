@@ -14,11 +14,11 @@ const user_auth_module_1 = require("./auth/user.auth.module");
 const database_module_1 = require("./database/database.module");
 const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
-const category_module_1 = require("./category/category.module");
-const admin_module_1 = require("./admin/admin.module");
 const vacancy_module_1 = require("./vacancy/vacancy.module");
 const category_module_1 = require("./category/category.module");
 const vacancy_respond_module_1 = require("./vacancy-respond/vacancy-respond.module");
+const admin_module_1 = require("./admin/admin.module");
+const claim_module_1 = require("./claim/claim.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -30,14 +30,11 @@ AppModule = __decorate([
             user_module_1.UserModule,
             user_auth_module_1.UserAuthModule,
             review_module_1.ReviewModule,
-<<<<<<< HEAD
-            category_module_1.CategoryModule,
-            admin_module_1.AdminModule,
-=======
             vacancy_module_1.VacancyModule,
             category_module_1.CategoryModule,
+            admin_module_1.AdminModule,
             vacancy_respond_module_1.VacancyRespondModule,
->>>>>>> 383b5636160d4c4e5950aa1d6ac237f7dbe66f90
+            claim_module_1.ClaimModule,
         ],
         controllers: [],
         providers: [],
