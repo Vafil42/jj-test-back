@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsEmail,
-  Length,
-  IsJSON,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, Length, IsJSON } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -111,7 +105,7 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({
     description: 'Resume',
-    example: 'Я люблю сосать большие и толстые члены.',
+    example: 'Я люблю Алину.',
   })
   about: string;
 

@@ -23,115 +23,142 @@ export class UserService {
   ) {}
 
   async findAll() {
-    return await this.userRepository.findAll({include: [SettingsEntity]});
+    return await this.userRepository.findAll({ include: [SettingsEntity] });
   }
 
   async create(dto: CreateUserDto) {
     try {
-    dto.password = await this.jwtService.sign(dto.password);
-      
-    if (
-      (
-        await this.userRepository.findAndCountAll({
-          where: { email: dto.email },
-        })
-      ).count != 0
-    ) {
-      throw new BadRequestException('Пользователь таким email уже существует');
-    }
+      dto.password = await this.jwtService.sign(dto.password);
 
-    const user = await this.userRepository.create(dto);
-    const settings = await this.settingsService.create(user)
-    await this.userRepository.sync();
-    if (user) {
-      return user;
+      if (
+        (
+          await this.userRepository.findAndCountAll({
+            where: { email: dto.email },
+          })
+        ).count != 0
+      ) {
+        throw new BadRequestException(
+          'Пользователь таким email уже существует',
+        );
+      }
+
+      const user = await this.userRepository.create(dto);
+      const settings = await this.settingsService.create(user);
+      await this.userRepository.sync();
+      if (user) {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 
   async ban(id: number, role: string) {
     try {
-    const user = await this.userRepository.findByPk(id);
-    this.permissionsCheck(user.role, role);
-    await user.update({ banned: true });
+      const user = await this.userRepository.findByPk(id);
+      this.permissionsCheck(user.role, role);
+      await user.update({ banned: true });
 
-    await this.userRepository.sync();
-    } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+      await this.userRepository.sync();
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    }
   }
 
   async update(id: number, dto: UpdateUserDto, role: string) {
     try {
-    const user = await this.userRepository.findByPk(id);
-    this.permissionsCheck(user.role, role);
-    await user.update(dto);
-    await this.userRepository.sync();
-    return user;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+      const user = await this.userRepository.findByPk(id);
+      this.permissionsCheck(user.role, role);
+      await user.update(dto);
+      await this.userRepository.sync();
+      return user;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    }
   }
 
   async delete(id: number, role: string) {
     try {
-    const user = await this.userRepository.findByPk(id);
-    if (
-      role === 'USER' ||
-      (role === 'ADMIN' && user.role === 'ADMIN') ||
-      (role === 'ADMIN' && user.role === 'ROOT')
-    ) {
-      throw new ForbiddenException('У вас нет прав доступа');
+      const user = await this.userRepository.findByPk(id);
+      if (
+        role === 'USER' ||
+        (role === 'ADMIN' && user.role === 'ADMIN') ||
+        (role === 'ADMIN' && user.role === 'ROOT')
+      ) {
+        throw new ForbiddenException('У вас нет прав доступа');
+      }
+      await user.destroy();
+      this.userRepository.sync();
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    await user.destroy();
-    this.userRepository.sync();
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 
   async findById(id: number) {
     try {
-    const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
-    return user;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
+      const user = await this.userRepository.findByPk(id, {
+        include: [SettingsEntity],
+      });
+      return user;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    }
   }
 
   async loginUser(id: number) {
     try {
-    const user = await this.userRepository.findByPk(id, {include: [SettingsEntity]});
-    if (user) {
-      return user;
+      const user = await this.userRepository.findByPk(id, {
+        include: [SettingsEntity],
+      });
+      if (user) {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 
   async loginAdmin(id: number) {
     try {
-    const user = await this.userRepository.findByPk(id);
-    if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
-      return user;
+      const user = await this.userRepository.findByPk(id);
+      if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 
   async loginRoot(id: number) {
     try {
-    const user = await this.userRepository.findByPk(id);
-    if (user && user.role === 'ROOT') {
-      return user;
+      const user = await this.userRepository.findByPk(id);
+      if (user && user.role === 'ROOT') {
+        return user;
+      }
+      return null;
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-    return null;
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 
   async validateUser(dto: LoginUserDto) {
     try {
-    const { email, password } = dto;
-    const user = await this.userRepository.findOne({ where: { email }, include: [SettingsEntity]});
-    if (user && (await this.jwtCheсk(user, password)) === true) {
-      return user;
-    } else {
-      return null;
+      const { email, password } = dto;
+      const user = await this.userRepository.findOne({
+        where: { email },
+        include: [SettingsEntity],
+      });
+      if (user && (await this.jwtCheсk(user, password)) === true) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
-  } catch(e) {throw new NotImplementedException('Поздравляю, вы сломали сервер')}
   }
 
   private async jwtCheсk(user: UserEntity, password: string) {
