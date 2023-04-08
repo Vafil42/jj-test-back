@@ -22,15 +22,10 @@ export class VacancyService {
   }
 
   async findByHref(href: string) {
-    try {
-      if (this.vacancyRepository.findOne({ where: { href } })) {
-        return await this.vacancyRepository.findOne({ where: { href } });
-      } else {
-        throw new BadRequestException('Вакансия не найдена');
-      }
-    } catch (e) {
-      console.log(e);
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    if (this.vacancyRepository.findOne({ where: { href } })) {
+      return await this.vacancyRepository.findOne({ where: { href } });
+    } else {
+      throw new BadRequestException('Not Found', 'Вакансия не найдена');
     }
   }
 
@@ -39,141 +34,123 @@ export class VacancyService {
   }
 
   async create(dto: CreateVacancyDto, req: any) {
-    try {
-      if (!(req.user.implication === 'legal')) {
-        throw new ForbiddenException(
-          'Недостаточно полномочий для совершения этого действия',
-        );
-      }
-      const vacancy = {
-        authorId: req.user.id,
-        avatar: req.user.avatar,
-        title: dto.title,
-        href: trans(dto.title.split(' ').join('').toLowerCase()),
-        category: dto.category,
-        region: dto.region,
-        body: dto.body,
-        requiredExp: dto.requiredExp,
-      };
-      return await this.vacancyRepository.create(vacancy);
-    } catch (e) {
-      console.log(e);
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    if (!(req.user.implication === 'legal')) {
+      throw new ForbiddenException(
+        'Forbidden',
+        'Недостаточно полномочий для совершения этого действия',
+      );
     }
+    const vacancy = {
+      authorId: req.user.id,
+      avatar: req.user.avatar,
+      title: dto.title,
+      href: trans(dto.title.split(' ').join('').toLowerCase()),
+      category: dto.category,
+      region: dto.region,
+      body: dto.body,
+      requiredExp: dto.requiredExp,
+    };
+    return await this.vacancyRepository.create(vacancy);
   }
 
   async update(href: string, dto: UpdateVacancyDto, req: any) {
-    try {
-      const updatingVacancy = await this.vacancyRepository.findOne({
-        where: { href },
-      });
-      if (!updatingVacancy) {
-        throw new NotFoundException('Вакансия не найдена');
-      }
-      if (
-        !(
-          req.user.id === updatingVacancy.authorId ||
-          req.user.role === ('ADMIN' || 'ROOT')
-        )
-      ) {
-        throw new ForbiddenException(
-          'Недостаточно полномочий для совершения этого действия',
-        );
-      }
-      const vacancy = {
-        title: dto.title,
-        href: trans(dto.title.split(' ').join('').toLowerCase()),
-        category: dto.category,
-        timestamp: dto.timestamp,
-        region: dto.region,
-        priority: dto.priority,
-        body: dto.body,
-        requiredExp: dto.requiredExp,
-      };
-      const updatedVacancy = await updatingVacancy.update(vacancy);
-      await this.vacancyRepository.sync();
-      return updatedVacancy;
-    } catch (e) {
-      console.log(e);
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    const updatingVacancy = await this.vacancyRepository.findOne({
+      where: { href },
+    });
+    if (!updatingVacancy) {
+      throw new NotFoundException('Not Found', 'Вакансия не найдена');
     }
+    if (
+      !(
+        req.user.id === updatingVacancy.authorId ||
+        req.user.role === ('ADMIN' || 'ROOT')
+      )
+    ) {
+      throw new ForbiddenException(
+        'Forbidden',
+        'Недостаточно полномочий для совершения этого действия',
+      );
+    }
+    const vacancy = {
+      title: dto.title,
+      href: trans(dto.title.split(' ').join('').toLowerCase()),
+      category: dto.category,
+      timestamp: dto.timestamp,
+      region: dto.region,
+      priority: dto.priority,
+      body: dto.body,
+      requiredExp: dto.requiredExp,
+    };
+    const updatedVacancy = await updatingVacancy.update(vacancy);
+    await this.vacancyRepository.sync();
+    return updatedVacancy;
   }
 
   async delete(href: string, req: any) {
-    try {
-      const deletingVacancy = await this.vacancyRepository.findOne({
-        where: { href },
-      });
-      if (!deletingVacancy) {
-        throw new NotFoundException('Вакансия не найдена');
-      }
-      if (
-        !(
-          req.user.id === deletingVacancy.authorId ||
-          req.user.role === ('ADMIN' || 'ROOT')
-        )
-      ) {
-        throw new ForbiddenException(
-          'Недостаточно полномочий для совершения этого действия',
-        );
-      }
-      await deletingVacancy.destroy();
-      this.vacancyRepository.sync();
-    } catch (e) {
-      console.log(e);
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    const deletingVacancy = await this.vacancyRepository.findOne({
+      where: { href },
+    });
+    if (!deletingVacancy) {
+      throw new NotFoundException('Not Found', 'Вакансия не найдена');
     }
+    if (
+      !(
+        req.user.id === deletingVacancy.authorId ||
+        req.user.role === ('ADMIN' || 'ROOT')
+      )
+    ) {
+      throw new ForbiddenException(
+        'Forbidden',
+        'Недостаточно полномочий для совершения этого действия',
+      );
+    }
+    await deletingVacancy.destroy();
+    this.vacancyRepository.sync();
   }
 
   async hideOrShow(href: string, req: any) {
-    try {
-      const vacancy = await this.vacancyRepository.findOne({
-        where: { href },
-      });
-      if (!vacancy) {
-        throw new NotFoundException('Вакансия не найдена');
+    const vacancy = await this.vacancyRepository.findOne({
+      where: { href },
+    });
+    if (!vacancy) {
+      throw new NotFoundException('Not Found', 'Вакансия не найдена');
+    }
+    if (!vacancy.moderate) {
+      throw new ForbiddenException(
+        'Forbidden',
+        'Вакансия отправлена на проверку модераторам. Попробуйте позже',
+      );
+    } else {
+      if (
+        !(
+          req.user.id === vacancy.authorId ||
+          req.user.role === ('ADMIN' || 'ROOT')
+        )
+      ) {
+        throw new ForbiddenException();
       }
-      if (!vacancy.moderate) {
-        throw new ForbiddenException(
-          'Вакансия отправлена на проверку модераторам. Попробуйте позже',
-        );
+      if (vacancy.show) {
+        const updatedVacancy = await vacancy.update({ show: false });
+        await this.vacancyRepository.sync();
+        return updatedVacancy;
       } else {
-        if (
-          !(
-            req.user.id === vacancy.authorId ||
-            req.user.role === ('ADMIN' || 'ROOT')
-          )
-        ) {
-          throw new ForbiddenException();
-        }
-        if (vacancy.show) {
-          const updatedVacancy = await vacancy.update({ show: false });
-          await this.vacancyRepository.sync();
-          return updatedVacancy;
-        } else {
-          const updatedVacancy = await vacancy.update({ show: true });
-          await this.vacancyRepository.sync();
-          return updatedVacancy;
-        }
+        const updatedVacancy = await vacancy.update({ show: true });
+        await this.vacancyRepository.sync();
+        return updatedVacancy;
       }
-    } catch (e) {
-      console.log(e);
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
     }
   }
 
   async moderate(href: string) {
-    try {
-      const vacancy = await this.vacancyRepository.findOne({ where: { href } });
-      if (vacancy.moderate) {
-        throw new BadRequestException('Эта вакансия уже прошла проверку');
-      } else {
-        await vacancy.update({ moderate: true, show: true });
-        await this.vacancyRepository.sync();
-      }
-    } catch (e) {
-      console.log(e);
-      throw new NotImplementedException('Поздравляю, вы сломали сервер');
+    const vacancy = await this.vacancyRepository.findOne({ where: { href } });
+    if (vacancy.moderate) {
+      throw new BadRequestException(
+        'Bad Request',
+        'Эта вакансия уже прошла проверку',
+      );
+    } else {
+      await vacancy.update({ moderate: true, show: true });
+      await this.vacancyRepository.sync();
     }
   }
 }

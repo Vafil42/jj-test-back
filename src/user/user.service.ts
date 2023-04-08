@@ -174,20 +174,18 @@ export class UserService {
   async changePassword(dto: ChangePasswordDto, req: any) {
     try {
       const password = dto.password;
-      let newPassword = dto.newPassword;
-      const user = await this.userRepository.findOne({
-        where: { id: req.user.id },
-      });
-      if (user && (await this.jwtCheck(user, password))) {
+      const newPassword = dto.newPassword;
+      if (await this.jwtCheck(req.user, password)) {
         if (password !== newPassword) {
-          newPassword = this.jwtService.sign(newPassword);
-          await user.update({ password: newPassword });
+          await req.user.update({
+            password: this.jwtService.sign(newPassword),
+          });
           await this.userRepository.sync();
         } else {
           throw new BadRequestException('Текущий и новый пароли совпадают');
         }
       } else {
-        throw new UnauthorizedException('Введен неверный пароль');
+        throw new BadRequestException('Введен неверный пароль');
       }
     } catch (e) {
       throw new NotImplementedException('Поздравляю, вы сломали сервер');
