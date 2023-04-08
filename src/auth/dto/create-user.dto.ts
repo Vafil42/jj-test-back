@@ -105,7 +105,7 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({
     description: 'Resume',
-    example: 'Я люблю сосать большие и толстые члены.',
+    example: 'Я люблю Алину.',
   })
   about: string;
 
