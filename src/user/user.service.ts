@@ -241,4 +241,30 @@ export class UserService {
     }
     return;
   }
+
+  async findOneByEmail(email: string, token: string) {
+    try {
+      const user = await this.userRepository.findOne({ where: { email } });
+      user.update({ tokenPass: token });
+      this.userRepository.sync();
+      return user;
+    } catch (e) {
+      throw new BadRequestException(
+        'Bad request',
+        'Пользователя с таким email не существует',
+      );
+    }
+  }
+  async verifaiEmail(token: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { tokenPass: token },
+      });
+      user.update({ emailVerified: true });
+      this.userRepository.sync();
+      return user;
+    } catch (e) {
+      throw new BadRequestException('Bad request', 'Не правильный код');
+    }
+  }
 }

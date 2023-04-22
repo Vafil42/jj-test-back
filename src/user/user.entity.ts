@@ -24,6 +24,13 @@ export class UserEntity extends Model<UserEntity> {
   @Column
   email: string;
 
+  @Default(false)
+  @Column
+  emailVerified: boolean;
+
+  @Column
+  tokenPass: string;
+
   @Column
   password: string;
 
