@@ -5,10 +5,12 @@ const sequelize_typescript_1 = require("sequelize-typescript");
 const article_entity_1 = require("../article/article.entity");
 const category_entity_1 = require("../category/category.entity");
 const review_entity_1 = require("../review/review.entity");
+const vacancy_entity_1 = require("../vacancy/vacancy.entity");
 const settings_entity_1 = require("../settings/settings.entity");
 const user_entity_1 = require("../user/user.entity");
 const constants_1 = require("../../constants");
 const database_config_1 = require("./database.config");
+const vacancy_respond_entity_1 = require("../vacancy-respond/vacancy-respond.entity");
 exports.databaseProviders = [
     {
         provide: constants_1.SEQUELIZE,
@@ -34,6 +36,10 @@ exports.databaseProviders = [
                 review_entity_1.ReviewEntity,
                 settings_entity_1.SettingsEntity,
                 category_entity_1.CategoryEntity,
+
+                vacancy_entity_1.VacancyEntity,
+                vacancy_respond_entity_1.VacancyRespondEntity,
+
             ]);
             await sequelize.sync();
             return sequelize;

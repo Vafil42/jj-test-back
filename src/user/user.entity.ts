@@ -77,6 +77,11 @@ export class UserEntity extends Model<UserEntity> {
     @Column
     role: string;
 
-    @HasOne(() => SettingsEntity)
-    settingsEntity: SettingsEntity;
+  @Default(false)
+  @Column
+  moderate: boolean;
+
+  @HasOne(() => SettingsEntity)
+  settingsEntity: SettingsEntity;
+
 }
