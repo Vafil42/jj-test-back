@@ -11,27 +11,27 @@ import { EmailController } from './email/email.controller';
 import { EmailModule } from './email/email.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    ArticleModule,
-    EmailModule,
-    DatabaseModule,
-    UserModule,
-    UserAuthModule,
-    ReviewModule,
-    CategoryModule,
-    MailerModule.forRoot({
-      transport: {
-        host: 'smtp.mail.ru',
-        auth: {
-          user: 'dalbab@inbox.ru',
-          pass: 'EJr394hhqjJTm9D8x8Qc',
-        },
-      },
-    }),
-  ],
-  controllers: [],
-  providers: [],
-  exports: [],
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        ArticleModule,
+        EmailModule,
+        DatabaseModule,
+        UserModule,
+        UserAuthModule,
+        ReviewModule,
+        CategoryModule,
+        MailerModule.forRoot({
+            transport: {
+                host: 'smtp.mail.ru',
+                auth: {
+                    user: 'dalbab@inbox.ru',
+                    pass: 'EJr394hhqjJTm9D8x8Qc',
+                },
+            },
+        }),
+    ],
+    controllers: [],
+    providers: [],
+    exports: [],
 })
 export class AppModule {}

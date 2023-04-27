@@ -15,6 +15,8 @@ const database_module_1 = require("./database/database.module");
 const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
 const category_module_1 = require("./category/category.module");
+const mailer_1 = require("@nestjs-modules/mailer");
+const email_module_1 = require("./email/email.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -22,11 +24,21 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
             article_module_1.ArticleModule,
+            email_module_1.EmailModule,
             database_module_1.DatabaseModule,
             user_module_1.UserModule,
             user_auth_module_1.UserAuthModule,
             review_module_1.ReviewModule,
             category_module_1.CategoryModule,
+            mailer_1.MailerModule.forRoot({
+                transport: {
+                    host: 'smtp.mail.ru',
+                    auth: {
+                        user: 'dalbab@inbox.ru',
+                        pass: 'EJr394hhqjJTm9D8x8Qc',
+                    },
+                },
+            }),
         ],
         controllers: [],
         providers: [],
