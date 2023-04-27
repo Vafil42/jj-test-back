@@ -16,6 +16,9 @@ const review_module_1 = require("./review/review.module");
 const user_module_1 = require("./user/user.module");
 const category_module_1 = require("./category/category.module");
 
+const mailer_1 = require("@nestjs-modules/mailer");
+const email_module_1 = require("./email/email.module");
+
 const admin_module_1 = require("./admin/admin.module");
 const vacancy_module_1 = require("./vacancy/vacancy.module");
 const category_module_1 = require("./category/category.module");
@@ -28,6 +31,7 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
             article_module_1.ArticleModule,
+            email_module_1.EmailModule,
             database_module_1.DatabaseModule,
             user_module_1.UserModule,
             user_auth_module_1.UserAuthModule,
@@ -41,8 +45,17 @@ AppModule = __decorate([
 
             vacancy_module_1.VacancyModule,
             category_module_1.CategoryModule,
-            admin_module_1.AdminModule,
-            vacancy_respond_module_1.VacancyRespondModule,
+
+            mailer_1.MailerModule.forRoot({
+                transport: {
+                    host: 'smtp.mail.ru',
+                    auth: {
+                        user: 'dalbab@inbox.ru',
+                        pass: 'EJr394hhqjJTm9D8x8Qc',
+                    },
+                },
+            }),
+
         ],
         controllers: [],
         providers: [],
