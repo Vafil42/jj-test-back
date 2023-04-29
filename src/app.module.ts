@@ -10,23 +10,34 @@ import { CategoryModule } from './category/category.module';
 import { VacancyRespondModule } from './vacancy-respond/vacancy-respond.module';
 import { AdminModule } from './admin/admin.module';
 import { ClaimModule } from './claim/claim.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EmailController } from './email/email.controller';
+import { EmailModule } from './email/email.module';
+
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    ArticleModule,
-    DatabaseModule,
-    UserModule,
-    UserAuthModule,
-    ReviewModule,
-    VacancyModule,
-    CategoryModule,
-    AdminModule,
-    VacancyRespondModule,
-    ClaimModule,
-  ],
-  controllers: [],
-  providers: [],
-  exports: [],
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        ArticleModule,
+        EmailModule,
+        DatabaseModule,
+        UserModule,
+        UserAuthModule,
+        ReviewModule,
+        CategoryModule,
+        ClaimModule,
+        MailerModule.forRoot({
+            transport: {
+                host: 'smtp.mail.ru',
+                auth: {
+                    user: 'dalbab@inbox.ru',
+                    pass: 'EJr394hhqjJTm9D8x8Qc',
+                },
+            },
+        }),
+    ],
+    controllers: [],
+    providers: [],
+    exports: [],
 })
 export class AppModule {}

@@ -37,9 +37,10 @@ exports.databaseProviders = [
                 review_entity_1.ReviewEntity,
                 settings_entity_1.SettingsEntity,
                 category_entity_1.CategoryEntity,
+
                 vacancy_entity_1.VacancyEntity,
                 vacancy_respond_entity_1.VacancyRespondEntity,
-                claim_entity_1.ClaimEntity,
+
             ]);
             await sequelize.sync();
             return sequelize;
