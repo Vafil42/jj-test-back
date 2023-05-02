@@ -9,6 +9,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 export class CategoryController {
     constructor(private categoryService: CategoryService) {}
 
+
     @ApiOperation({summary: 'Создание категории админом'})
     @ApiHeader({name: 'Authorization'})
     @UseGuards(JwtAdminAuthGuard)
@@ -16,6 +17,7 @@ export class CategoryController {
     async create(@Body() dto: CreateCategoryDto) {
         return await this.categoryService.create(dto);
     }
+
 
     @ApiOperation({summary: 'Удаление категории по id админом'})
     @ApiHeader({name: 'Authorization', description: 'Bearer token'})
@@ -27,13 +29,16 @@ export class CategoryController {
 
     @ApiOperation({summary: 'Получение всех категорий'})
     @ApiHeader({name: 'Authorization', description: 'Bearer token'})
+
     @Get()
     async findAll() {
         return await this.categoryService.findAll();
     }
 
+
     @ApiOperation({summary: 'Получение категории по id'})
     @ApiHeader({name: 'Authorization', description: 'Bearer token'})
+
     @Get(':id')
     async findOneById(@Param() param) {
         return await this.categoryService.findOneById(param.id);

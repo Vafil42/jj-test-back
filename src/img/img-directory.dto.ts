@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator';
 export class CreateArticleDto {
-  @IsString()
-  namefile: string;
+    @IsString()
+    namefile: string;
 
-  @IsString()
-  directiry: string;
+    @IsString()
+    directiry: string;
 }

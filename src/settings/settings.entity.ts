@@ -1,5 +1,15 @@
-import { BelongsTo, Column, DataType, Default, ForeignKey, Length, Model, Table, Unique } from "sequelize-typescript";
-import { UserEntity } from "src/user/user.entity";
+import {
+    BelongsTo,
+    Column,
+    DataType,
+    Default,
+    ForeignKey,
+    Length,
+    Model,
+    Table,
+    Unique,
+} from 'sequelize-typescript';
+import { UserEntity } from 'src/user/user.entity';
 
 @Table
 export class SettingsEntity extends Model<SettingsEntity> {
@@ -10,15 +20,15 @@ export class SettingsEntity extends Model<SettingsEntity> {
     @BelongsTo(() => UserEntity)
     userEntity: UserEntity;
 
-    @Length({max: 11})
+    @Length({ max: 11 })
     @Default(null)
     @Unique
     @Column
     phone: string;
 
     @Column
-    email: string
-    
+    email: string;
+
     @Default('light')
     @Column
     theme: string;
@@ -26,5 +36,4 @@ export class SettingsEntity extends Model<SettingsEntity> {
     @Default([])
     @Column(DataType.ARRAY(DataType.STRING))
     notification: string[];
-
 }

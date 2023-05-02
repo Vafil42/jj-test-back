@@ -11,36 +11,33 @@ import { VacancyRespondEntity } from 'src/vacancy-respond/vacancy-respond.entity
 import { ClaimEntity } from 'src/claim/claim.entity';
 
 export const databaseProviders = [
-  {
-    provide: SEQUELIZE,
-    useFactory: async () => {
-      let config;
-      switch (process.env.NODE_ENV) {
-        case DEVELOPMENT:
-          config = databaseConfig.development;
-          break;
-        case TEST:
-          config = databaseConfig.test;
-          break;
-        case PRODUCTION:
-          config = databaseConfig.production;
-          break;
-        default:
-          config = databaseConfig.development;
-      }
-      const sequelize = new Sequelize(config);
-      sequelize.addModels([
-        UserEntity,
-        ArticleEntity,
-        ReviewEntity,
-        SettingsEntity,
-        CategoryEntity,
-        VacancyEntity,
-        VacancyRespondEntity,
-        ClaimEntity,
-      ]);
-      await sequelize.sync();
-      return sequelize;
+    {
+        provide: SEQUELIZE,
+        useFactory: async () => {
+            let config;
+            switch (process.env.NODE_ENV) {
+                case DEVELOPMENT:
+                    config = databaseConfig.development;
+                    break;
+                case TEST:
+                    config = databaseConfig.test;
+                    break;
+                case PRODUCTION:
+                    config = databaseConfig.production;
+                    break;
+                default:
+                    config = databaseConfig.development;
+            }
+            const sequelize = new Sequelize(config);
+            sequelize.addModels([
+                UserEntity,
+                ArticleEntity,
+                ReviewEntity,
+                SettingsEntity,
+                CategoryEntity,
+            ]);
+            await sequelize.sync();
+            return sequelize;
+        },
     },
-  },
 ];

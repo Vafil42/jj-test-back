@@ -1,4 +1,9 @@
-import { ForbiddenException, Inject, Injectable, InternalServerErrorException, NotImplementedException } from '@nestjs/common';
+import {
+    ForbiddenException,
+    Inject,
+    Injectable,
+    NotImplementedException,
+} from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewEntity } from './review.entity';
 import { UserService } from '../user/user.service';
@@ -6,11 +11,11 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 
 @Injectable()
 export class ReviewService {
-  constructor(
-    @Inject('REVIEW_REPOSITORY')
-    private reviewRepository: typeof ReviewEntity,
-    private userService: UserService,
-  ) {}
+    constructor(
+        @Inject('REVIEW_REPOSITORY')
+        private reviewRepository: typeof ReviewEntity,
+        private userService: UserService,
+    ) {}
 
   async create(dto: CreateReviewDto, req: any) {
     try {

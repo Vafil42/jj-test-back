@@ -11,13 +11,13 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 @ApiTags('Запросы User')
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+    constructor(private userService: UserService) {}
 
-  @ApiOperation({ summary: 'Получение списка пользователей' })
-  @Get()
-  async findAll() {
-    return await this.userService.findAll();
-  }
+    @ApiOperation({ summary: 'Получение списка пользователей' })
+    @Get()
+    async findAll() {
+        return await this.userService.findAll();
+    }
 
   @UseGuards(JwtAdminAuthGuard)
   @ApiOperation({ summary: 'Получение списка неодобренных пользователей' })
@@ -34,26 +34,27 @@ export class UserController {
     return await this.userService.findById(param.id);
   }
 
-  @UseGuards(JwtAdminAuthGuard)
-  @ApiOperation({ summary: 'Создание пользователя' })
-  @Post()
-  async create(@Body() dto: CreateUserDto) {
-    return this.userService.create(dto);
-  }
 
-  @UseGuards(JwtAdminAuthGuard)
-  @ApiOperation({ summary: 'Блокировка пользователя по id' })
-  @Post(':id')
-  async ban(@Param() param, @Request() req) {
-    return await this.userService.ban(param.id, req.user.role);
-  }
+    @UseGuards(JwtAdminAuthGuard)
+    @ApiOperation({ summary: 'Создание пользователя' })
+    @Post()
+    async create(@Body() dto: CreateUserDto) {
+        return this.userService.create(dto);
+    }
 
-  @UseGuards(JwtAdminAuthGuard)
-  @ApiOperation({ summary: 'Удаление пользователя по id' })
-  @Delete(':id')
-  async delete(@Param() param, @Request() req) {
-    return await this.userService.delete(param.id, req.user.role);
-  }
+    @UseGuards(JwtAdminAuthGuard)
+    @ApiOperation({ summary: 'Блокировка пользователя по id' })
+    @Post(':id')
+    async ban(@Param() param, @Request() req) {
+        return await this.userService.ban(param.id, req.user.role);
+    }
+
+    @UseGuards(JwtAdminAuthGuard)
+    @ApiOperation({ summary: 'Удаление пользователя по id' })
+    @Delete(':id')
+    async delete(@Param() param, @Request() req) {
+        return await this.userService.delete(param.id, req.user.role);
+    }
 
   @UseGuards(JwtUserAuthGuard)
   @ApiOperation({ summary: 'Смена пароля' })

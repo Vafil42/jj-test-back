@@ -12,17 +12,17 @@ import { JwtAdminStrategy } from './strategy/jwtAdmin.strategy';
 dotenv.config();
 
 @Module({
-  imports: [
-    UserModule,
-    PassportModule,
-    JwtModule.register({ secret: process.env.JWT_SECRET }),
-  ],
-  controllers: [UserAuthController],
-  providers: [
-    LocalStrategy,
-    JwtUserStrategy,
-    JwtAdminStrategy,
-    UserAuthService,
-  ],
+    imports: [
+        UserModule,
+        PassportModule,
+        JwtModule.register({ secret: process.env.JWT_SECRET }),
+    ],
+    controllers: [UserAuthController],
+    providers: [
+        LocalStrategy,
+        JwtUserStrategy,
+        JwtAdminStrategy,
+        UserAuthService,
+    ],
 })
 export class UserAuthModule {}

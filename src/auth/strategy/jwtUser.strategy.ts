@@ -8,15 +8,15 @@ dotenv.config();
 
 @Injectable()
 export class JwtUserStrategy extends PassportStrategy(Strategy, 'jwtUser') {
-  constructor(private userService: UserService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
-    });
-  }
+    constructor(private userService: UserService) {
+        super({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: process.env.JWT_SECRET,
+        });
+    }
 
-  async validate(payload: any) {
-    return this.userService.loginUser(payload.sub);
-  }
+    async validate(payload: any) {
+        return this.userService.loginUser(payload.sub);
+    }
 }
