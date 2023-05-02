@@ -2,10 +2,13 @@ import { Sequelize } from 'sequelize-typescript';
 import { ArticleEntity } from 'src/article/article.entity';
 import { CategoryEntity } from 'src/category/category.entity';
 import { ReviewEntity } from 'src/review/review.entity';
+import { VacancyEntity } from 'src/vacancy/vacancy.entity';
 import { SettingsEntity } from 'src/settings/settings.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../../constants';
 import { databaseConfig } from './database.config';
+import { VacancyRespondEntity } from 'src/vacancy-respond/vacancy-respond.entity';
+import { ClaimEntity } from 'src/claim/claim.entity';
 
 export const databaseProviders = [
     {
