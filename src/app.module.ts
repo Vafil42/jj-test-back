@@ -13,7 +13,6 @@ import { ClaimModule } from './claim/claim.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './email/email.module';
 
-
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
