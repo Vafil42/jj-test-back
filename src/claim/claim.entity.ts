@@ -1,4 +1,4 @@
-import { Column, DataType, Model, Default, Table } from "sequelize-typescript";
+import { Column, DataType, Model, Default, Table } from 'sequelize-typescript';
 
 @Table
 export class ClaimEntity extends Model<ClaimEntity> {

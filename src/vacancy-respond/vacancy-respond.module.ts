@@ -9,8 +9,8 @@ import { VacancyRespondService } from './vacancy-respond.service';
 dotenv.config();
 
 @Module({
-  imports: [VacancyModule],
-  controllers: [VacancyRespondController],
-  providers: [VacancyRespondService, ...vacancyRespondProviders],
+    imports: [VacancyModule],
+    controllers: [VacancyRespondController],
+    providers: [VacancyRespondService, ...vacancyRespondProviders],
 })
 export class VacancyRespondModule {}

@@ -10,14 +10,16 @@ import { CreateClaimDto } from './dto/create-claim.dto';
 export class ClaimController {
     constructor(private claimService: ClaimService) {}
 
-    @ApiOperation({summary: 'Создание жалобы'})
+    @ApiOperation({ summary: 'Создание жалобы' })
     @Post()
     async create(@Body() dto: CreateClaimDto) {
         return await this.claimService.create(dto);
     }
-    
-    @ApiHeader({name: 'Authorization', description: 'Bearer token'})
-    @ApiOperation({summary: 'Получения списка неотмодерированных жалоб админом'})
+
+    @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
+    @ApiOperation({
+        summary: 'Получения списка неотмодерированных жалоб админом',
+    })
     @UseGuards(JwtAdminAuthGuard)
     @Get()
     async findNotModerated() {
