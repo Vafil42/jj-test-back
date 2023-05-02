@@ -7,8 +7,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Module({
-  exports: [],
-  controllers: [ArticleController],
-  providers: [ArticleService, ...articleProviders],
+    exports: [],
+    controllers: [ArticleController],
+    providers: [ArticleService, ...articleProviders],
 })
 export class ArticleModule {}

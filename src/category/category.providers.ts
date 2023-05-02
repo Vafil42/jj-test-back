@@ -1,8 +1,8 @@
-import { CategoryEntity } from "./category.entity";
+import { CategoryEntity } from './category.entity';
 
 export const categoryProviders = [
     {
         provide: 'CATEGORY_REPOSITORY',
-        useValue: CategoryEntity
+        useValue: CategoryEntity,
     },
-]
+];

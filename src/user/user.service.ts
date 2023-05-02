@@ -43,7 +43,6 @@ export class UserService {
             }
 
             const user = await this.userRepository.create(dto);
-            const settings = await this.settingsService.create(user);
             await this.userRepository.sync();
             if (user) {
                 return user;

@@ -8,25 +8,25 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 export class CategoryController {
     constructor(private categoryService: CategoryService) {}
 
-    @ApiOperation({summary: 'Создание категории'})
+    @ApiOperation({ summary: 'Создание категории' })
     @Post()
     async create(@Body() dto: CreateCategoryDto) {
         return await this.categoryService.create(dto);
     }
 
-    @ApiOperation({summary: 'Удаление категории по id'})
+    @ApiOperation({ summary: 'Удаление категории по id' })
     @Delete(':id')
     async delete(@Param() param) {
         return await this.categoryService.delete(param.id);
     }
 
-    @ApiOperation({summary: 'Получение всех категорий'})
+    @ApiOperation({ summary: 'Получение всех категорий' })
     @Get()
     async findAll() {
         return await this.categoryService.findAll();
     }
 
-    @ApiOperation({summary: 'Получение категории по id'})
+    @ApiOperation({ summary: 'Получение категории по id' })
     @Get(':id')
     async findOneById(@Param() param) {
         return await this.categoryService.findOneById(param.id);

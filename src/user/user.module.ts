@@ -9,9 +9,12 @@ import { SettingsModule } from 'src/settings/settings.module';
 dotenv.config();
 
 @Module({
-  exports: [UserModule, UserService],
-  imports: [JwtModule.register({ secret: process.env.DB_HASH_SECRET }), SettingsModule],
-  controllers: [UserController],
-  providers: [UserService, ...userProviders],
+    exports: [UserModule, UserService],
+    imports: [
+        JwtModule.register({ secret: process.env.DB_HASH_SECRET }),
+        SettingsModule,
+    ],
+    controllers: [UserController],
+    providers: [UserService, ...userProviders],
 })
 export class UserModule {}

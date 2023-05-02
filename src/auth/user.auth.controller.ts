@@ -10,27 +10,27 @@ import { LoginUserDto } from './dto/login-user.dto';
 @ApiTags('Запросы User')
 @Controller('auth')
 export class UserAuthController {
-  constructor(private userAuthService: UserAuthService) {}
+    constructor(private userAuthService: UserAuthService) {}
 
-  @ApiOperation({ summary: 'Аутентификация пользователя' })
-  @ApiBody({ type: [LoginUserDto] })
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  async login(@Request() req) {
-    return this.userAuthService.login(req.user);
-  }
+    @ApiOperation({ summary: 'Аутентификация пользователя' })
+    @ApiBody({ type: [LoginUserDto] })
+    @UseGuards(LocalAuthGuard)
+    @Post('login')
+    async login(@Request() req) {
+        return this.userAuthService.login(req.user);
+    }
 
-  @ApiOperation({ summary: 'Авторизация пользователя' })
-  @ApiHeader({ name: 'Authorization' })
-  @UseGuards(JwtUserAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return this.userAuthService.login(req.user);
-  }
+    @ApiOperation({ summary: 'Авторизация пользователя' })
+    @ApiHeader({ name: 'Authorization' })
+    @UseGuards(JwtUserAuthGuard)
+    @Get('profile')
+    getProfile(@Request() req) {
+        return this.userAuthService.login(req.user);
+    }
 
-  @ApiOperation({ summary: 'Регистрация пользователя' })
-  @Post('create')
-  async create(@Body() dto: CreateUserDto) {
-    return this.userAuthService.createUser(dto);
-  }
+    @ApiOperation({ summary: 'Регистрация пользователя' })
+    @Post('create')
+    async create(@Body() dto: CreateUserDto) {
+        return this.userAuthService.createUser(dto);
+    }
 }
