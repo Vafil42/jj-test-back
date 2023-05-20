@@ -19,7 +19,7 @@ dotenv.config();
     ],
 
     controllers: [UserAuthController],
-    
+
     providers: [
         LocalStrategy,
         JwtUserStrategy,

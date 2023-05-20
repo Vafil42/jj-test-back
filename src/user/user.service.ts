@@ -30,125 +30,171 @@ export class UserService {
     }
 
     async create(dto: CreateUserDto) {
-            dto.password = this.jwtService.sign(dto.password);
+        dto.password = this.jwtService.sign(dto.password);
 
-            if(this.userRepository.findAll({where: {email: dto.email}})) {throw new BadRequestException('Bad request', 'Пользователь с таким email уже существует') }
+        if (this.userRepository.findAll({ where: { email: dto.email } })) {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователь с таким email уже существует',
+            );
+        }
 
-            const user = await this.userRepository.create(dto);
-            if (user) { return user }
-            return null;
+        const user = await this.userRepository.create(dto);
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findNotModerated() {
-        return await this.userRepository.findAll({ where: { moderate: false } });
+        return await this.userRepository.findAll({
+            where: { moderate: false },
+        });
     }
 
     async ban(id: number, role: string) {
-            const user = await this.userRepository.findByPk(id);
-            if (!user) { throw new BadRequestException('Bad request', 'Пользователя с таким id не существует')}
-            this.permissionsCheckOnlyAdmin(user.role, role);
-            await user.update({ banned: true });
-            return user;
+        const user = await this.userRepository.findByPk(id);
+        if (!user) {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователя с таким id не существует',
+            );
+        }
+        this.permissionsCheckOnlyAdmin(user.role, role);
+        await user.update({ banned: true });
+        return user;
     }
 
     async update(id: number, dto: UpdateUserDto, subUser: UserEntity) {
-            const user = await this.userRepository.findByPk(id);
-            if (!user) { throw new BadRequestException('Bad request', 'Пользователя с таким id не существует')};
-            this.permissionsCheckAdminOrUser(subUser.role, subUser.id, id);
-            await user.update(dto);
-            return user;
+        const user = await this.userRepository.findByPk(id);
+        if (!user) {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователя с таким id не существует',
+            );
+        }
+        this.permissionsCheckAdminOrUser(subUser.role, subUser.id, id);
+        await user.update(dto);
+        return user;
     }
 
     async delete(id: number, role: string) {
-            const user = await this.userRepository.findByPk(id);
-            if (!user) { throw new BadRequestException('Bad request', 'Пользователя с таким id не существует')};
-            if (
-                role === 'USER' ||
-                (role === 'ADMIN' && user.role === 'ADMIN') ||
-                (role === 'ADMIN' && user.role === 'ROOT')
-            ) {
-                throw new ForbiddenException('У вас нет прав доступа');
-            }
-            await user.destroy();
-            this.userRepository.sync();
-            return user;
+        const user = await this.userRepository.findByPk(id);
+        if (!user) {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователя с таким id не существует',
+            );
+        }
+        if (
+            role === 'USER' ||
+            (role === 'ADMIN' && user.role === 'ADMIN') ||
+            (role === 'ADMIN' && user.role === 'ROOT')
+        ) {
+            throw new ForbiddenException('У вас нет прав доступа');
+        }
+        await user.destroy();
+        this.userRepository.sync();
+        return user;
     }
 
     async findById(id: number) {
-            const user = await this.userRepository.findByPk(id, {
-                include: [SettingsEntity],
-            });
-            if (!user) { throw new BadRequestException('Bad request', 'Пользователя с таким id не существует')};
-            return user;
+        const user = await this.userRepository.findByPk(id, {
+            include: [SettingsEntity],
+        });
+        if (!user) {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователя с таким id не существует',
+            );
+        }
+        return user;
     }
 
     async loginUser(id: number) {
-            const user = await this.userRepository.findByPk(id, {
-                include: [SettingsEntity],
-            });
-            if (!user) { throw new BadRequestException('Bad request', 'Пользователя с таким id не существует')};
-            return user;
+        const user = await this.userRepository.findByPk(id, {
+            include: [SettingsEntity],
+        });
+        if (!user) {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователя с таким id не существует',
+            );
+        }
+        return user;
     }
 
     async loginAdmin(id: number) {
-            const user = await this.userRepository.findByPk(id);
-            if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
-                return user;
-            }
-            throw new BadRequestException('Bad request', 'Пользователя с таким id не существует');
+        const user = await this.userRepository.findByPk(id);
+        if (user && (user.role === 'ADMIN' || user.role === 'ROOT')) {
+            return user;
+        }
+        throw new BadRequestException(
+            'Bad request',
+            'Пользователя с таким id не существует',
+        );
     }
 
     async loginRoot(id: number) {
-            const user = await this.userRepository.findByPk(id);
-            if (user && user.role === 'ROOT') {
-                return user;
-            }
-            throw new BadRequestException('Bad request', 'Пользователя с таким id не существует');
+        const user = await this.userRepository.findByPk(id);
+        if (user && user.role === 'ROOT') {
+            return user;
+        }
+        throw new BadRequestException(
+            'Bad request',
+            'Пользователя с таким id не существует',
+        );
     }
 
     async validateUser(dto: LoginUserDto) {
-            const { email, password } = dto;
-            const user = await this.userRepository.findOne({
-                where: { email },
-                include: [SettingsEntity],
-            });
-            if (user && (await this.jwtCheck(user, password)) === true) {
-                return user;
-            } else {
-                throw new BadRequestException('Bad request', 'Пользователя с таким id не существует');
-            }
+        const { email, password } = dto;
+        const user = await this.userRepository.findOne({
+            where: { email },
+            include: [SettingsEntity],
+        });
+        if (user && (await this.jwtCheck(user, password)) === true) {
+            return user;
+        } else {
+            throw new BadRequestException(
+                'Bad request',
+                'Пользователя с таким id не существует',
+            );
+        }
     }
 
     async changePassword(dto: ChangePasswordDto, req: any) {
-            const password = dto.password;
-            const newPassword = dto.newPassword;
-            if (await this.jwtCheck(req.user, password)) {
-                if (password !== newPassword) {
-                    await req.user.update({
-                        password: this.jwtService.sign(newPassword),
-                    });
-                    await this.userRepository.sync();
-                } else {
-                    throw new BadRequestException(
-                        'Текущий и новый пароли совпадают',
-                    );
-                }
+        const password = dto.password;
+        const newPassword = dto.newPassword;
+        if (await this.jwtCheck(req.user, password)) {
+            if (password !== newPassword) {
+                await req.user.update({
+                    password: this.jwtService.sign(newPassword),
+                });
+                await this.userRepository.sync();
             } else {
-                throw new BadRequestException('Bad request', 'Введен неверный пароль');
+                throw new BadRequestException(
+                    'Текущий и новый пароли совпадают',
+                );
             }
+        } else {
+            throw new BadRequestException(
+                'Bad request',
+                'Введен неверный пароль',
+            );
+        }
     }
 
     async moderate(id: number) {
-            const user = await this.userRepository.findOne({ where: { id } });
-            if (user.moderate) {
-                throw new BadRequestException(
-                    'Bad request',
-                    'Этот пользователь уже прошел проверку',
-                );
-            } else {
-                await user.update({ moderate: true });
-                await this.userRepository.sync();
-            }
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (user.moderate) {
+            throw new BadRequestException(
+                'Bad request',
+                'Этот пользователь уже прошел проверку',
+            );
+        } else {
+            await user.update({ moderate: true });
+            await this.userRepository.sync();
+        }
     }
 
     private async jwtCheck(user: UserEntity, password: string) {
